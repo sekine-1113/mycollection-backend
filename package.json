@@ -15,6 +15,8 @@
     "eslint": "^9.17.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.11",
     "nodemon": "^3.1.9",
     "prettier": "^3.4.2",
     "ts-node": "^10.9.2",
@@ -37,5 +39,14 @@
     "lint": "npx prettier --write 'src/**/*.ts' && npx eslint --fix 'src/**/*.ts'",
     "prisma:reset": "npx prisma migrate reset && npx prisma migrate dev",
     "prisma:gui": "npx prisma studio"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.json": [
+      "prettier --write"
+    ]
   }
 }
