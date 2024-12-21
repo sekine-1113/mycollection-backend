@@ -22,7 +22,7 @@ export class UserService {
     loginId: string,
     rawPassword: string,
     username: string,
-    displayName: string | null
+    displayName: string | null,
   ) {
     const soltRounds = 10;
     const hashedPassword = await bcrypt.hash(rawPassword, soltRounds);

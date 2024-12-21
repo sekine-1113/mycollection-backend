@@ -26,7 +26,7 @@ authRouter.post('/login', async (req: Request, res: Response) => {
     const token = jwt.sign(
       { id: user.id, displayName: user.display_name ?? user.username },
       config.jwt.secret as Secret,
-      config.jwt.options as SignOptions
+      config.jwt.options as SignOptions,
     );
     res.cookie('token', token, {
       httpOnly: true,

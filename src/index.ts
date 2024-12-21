@@ -8,11 +8,11 @@ cron.schedule('0 0 * * *', async () => {
   const systemLogRetentionPeriod = 365;
   const accessLogCutoffDate = new Date();
   accessLogCutoffDate.setDate(
-    accessLogCutoffDate.getDate() - accessLogRetentionPeriod
+    accessLogCutoffDate.getDate() - accessLogRetentionPeriod,
   );
   const systemLogCutoffDate = new Date();
   systemLogCutoffDate.setDate(
-    systemLogCutoffDate.getDate() - systemLogRetentionPeriod
+    systemLogCutoffDate.getDate() - systemLogRetentionPeriod,
   );
 
   try {
