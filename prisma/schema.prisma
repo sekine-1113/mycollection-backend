@@ -1,0 +1,115 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int         @id @default(autoincrement())
+  public_id    String      @unique @default(uuid())
+  login_id     String      @unique
+  username     String
+  display_name String?
+  password     String
+  icon_url     String?     @default("")
+  items        UserItem[]
+  statuses     Status[]
+  AccessLog    AccessLog[]
+  Item         Item[]
+  Category     Category[]
+  is_public    Boolean     @default(true)
+  is_active    Boolean     @default(true)
+  is_deleted   Boolean     @default(false)
+  created_at   DateTime    @default(now())
+  updated_at   DateTime    @updatedAt
+  last_login   DateTime    @default(now())
+}
+
+model Category {
+  id         Int      @id @default(autoincrement())
+  public_id  String   @unique @default(uuid())
+  name       String   @unique
+  created_by User     @relation(fields: [user_id], references: [id])
+  user_id    Int
+  is_public  Boolean  @default(true)
+  is_active  Boolean  @default(true)
+  is_deleted Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Item {
+  id          Int        @id @default(autoincrement())
+  public_id   String     @unique @default(uuid())
+  name        String     @unique
+  description String?
+  image_url   String?    @default("")
+  category_id String
+  users       UserItem[]
+  created_by  User       @relation(fields: [user_id], references: [id])
+  user_id     Int
+  is_public   Boolean    @default(true)
+  is_active   Boolean    @default(true)
+  is_deleted  Boolean    @default(false)
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+}
+
+model UserItem {
+  id         Int      @id @default(autoincrement())
+  public_id  String   @unique @default(uuid())
+  user       User     @relation(fields: [user_id], references: [id])
+  user_id    Int
+  item       Item     @relation(fields: [item_id], references: [id])
+  item_id    Int
+  status     Status   @relation(fields: [status_id], references: [id])
+  status_id  Int
+  notes      String?
+  is_public  Boolean  @default(true)
+  is_active  Boolean  @default(true)
+  is_deleted Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@unique([user_id, item_id])
+}
+
+model Status {
+  id          Int        @id @default(autoincrement())
+  public_id   String     @unique @default(uuid())
+  name        String
+  description String?
+  items       UserItem[]
+  created_by  User       @relation(fields: [user_id], references: [id])
+  user_id     Int
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+}
+
+model SystemLog {
+  id         Int      @id @default(autoincrement())
+  public_id  String   @unique @default(uuid())
+  level      String
+  message    String
+  context    String?
+  created_at DateTime @default(now())
+}
+
+model AccessLog {
+  id          Int      @id @default(autoincrement())
+  public_id   String   @unique @default(uuid())
+  user        User     @relation(fields: [user_id], references: [id])
+  user_id     Int
+  ip_address  String   @default("")
+  url         String
+  method      String
+  status_code Int
+  user_agent  String?
+  created_at  DateTime @default(now())
+}
