@@ -11,24 +11,27 @@ datasource db {
 }
 
 model User {
-  id           Int         @id @default(autoincrement())
-  public_id    String      @unique @default(uuid())
-  login_id     String      @unique
+  id           Int          @id @default(autoincrement())
+  public_id    String       @unique @default(uuid())
+  login_id     String       @unique
+  email        String?      @unique
   username     String
   display_name String?
   password     String
-  icon_url     String?     @default("")
-  items        UserItem[]
-  statuses     Status[]
-  AccessLog    AccessLog[]
-  Item         Item[]
-  Category     Category[]
-  is_public    Boolean     @default(true)
-  is_active    Boolean     @default(true)
-  is_deleted   Boolean     @default(false)
-  created_at   DateTime    @default(now())
-  updated_at   DateTime    @updatedAt
-  last_login   DateTime    @default(now())
+  permission   Int
+  icon_url     String?      @default("")
+  user_item    UserItem[]
+  status       Status[]
+  item         Item[]
+  category     Category[]
+  collection   Collection[]
+  accessLog    AccessLog[]
+  is_public    Boolean      @default(true)
+  is_active    Boolean      @default(true)
+  is_deleted   Boolean      @default(false)
+  created_at   DateTime     @default(now())
+  updated_at   DateTime     @updatedAt
+  last_login   DateTime     @default(now())
 }
 
 model Category {
@@ -45,20 +48,21 @@ model Category {
 }
 
 model Item {
-  id          Int        @id @default(autoincrement())
-  public_id   String     @unique @default(uuid())
-  name        String     @unique
-  description String?
-  image_url   String?    @default("")
-  category_id String
-  users       UserItem[]
-  created_by  User       @relation(fields: [user_id], references: [id])
-  user_id     Int
-  is_public   Boolean    @default(true)
-  is_active   Boolean    @default(true)
-  is_deleted  Boolean    @default(false)
-  created_at  DateTime   @default(now())
-  updated_at  DateTime   @updatedAt
+  id             Int              @id @default(autoincrement())
+  public_id      String           @unique @default(uuid())
+  name           String           @unique
+  description    String?
+  image_url      String?          @default("")
+  category_id    String
+  users          UserItem[]
+  collectionItem CollectionItem[]
+  created_by     User             @relation(fields: [user_id], references: [id])
+  user_id        Int
+  is_public      Boolean          @default(true)
+  is_active      Boolean          @default(true)
+  is_deleted     Boolean          @default(false)
+  created_at     DateTime         @default(now())
+  updated_at     DateTime         @updatedAt
 }
 
 model UserItem {
@@ -85,11 +89,35 @@ model Status {
   public_id   String     @unique @default(uuid())
   name        String
   description String?
-  items       UserItem[]
+  user_item   UserItem[]
   created_by  User       @relation(fields: [user_id], references: [id])
   user_id     Int
   created_at  DateTime   @default(now())
   updated_at  DateTime   @updatedAt
+}
+
+model Collection {
+  id             Int              @id @default(autoincrement())
+  public_id      String           @unique @default(uuid())
+  name           String
+  user           User             @relation(fields: [user_id], references: [id])
+  user_id        Int
+  collectionItem CollectionItem[]
+  is_public      Boolean          @default(true)
+  created_at     DateTime         @default(now())
+  updated_at     DateTime         @updatedAt
+}
+
+model CollectionItem {
+  id            Int        @id @default(autoincrement())
+  public_id     String     @unique @default(uuid())
+  collection    Collection @relation(fields: [collection_id], references: [id])
+  collection_id Int
+  item          Item       @relation(fields: [item_id], references: [id])
+  item_id       Int
+  added_at      DateTime   @default(now())
+
+  @@unique([collection_id, item_id])
 }
 
 model SystemLog {
