@@ -1,9 +1,9 @@
 import prisma from '../prisma';
 
-export class UserRepository {
-  async findByLoginId(loginId: string) {
-    return prisma.user.findFirst({
-      where: { login_id: loginId },
+export class ItemRepository {
+  async findByItemId(itemId: number) {
+    return prisma.item.findFirst({
+      where: { id: itemId },
     });
   }
 
@@ -13,13 +13,13 @@ export class UserRepository {
     });
   }
 
-  async createUser(data: {
-    login_id: string;
-    password: string;
-    username: string;
-    display_name: string | null;
+  async createItem(data: {
+    name: string;
+    description: string | null;
+    category_id: string;
+    user_id: number;
   }) {
-    return prisma.user.create({
+    return prisma.item.create({
       data,
     });
   }
@@ -34,14 +34,7 @@ export class UserRepository {
     });
   }
 
-  async updateUserLastLogin(id: number) {
-    return prisma.user.update({
-      where: { id },
-      data: { last_login: new Date() },
-    });
-  }
-
-  async deleteUser(id: number) {
+  async deleteItem(id: number) {
     return prisma.user.delete({
       where: { id },
     });
