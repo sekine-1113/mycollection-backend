@@ -3,6 +3,13 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "dev": "npx nodemon src/index.ts",
+    "lint": "npx prettier --write 'src/**/*.ts' && npx eslint --fix 'src/**/*.ts'",
+    "prisma:reset": "npx prisma migrate reset && npx prisma migrate dev",
+    "prisma:gui": "npx prisma studio",
+    "prepare": "husky install"
+  },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.17",
@@ -33,12 +40,5 @@
     "jsonwebtoken": "^9.0.2",
     "node-cron": "^3.0.3",
     "prisma": "^6.0.1"
-  },
-  "scripts": {
-    "dev": "npx nodemon src/index.ts",
-    "lint": "npx prettier --write 'src/**/*.ts' && npx eslint --fix 'src/**/*.ts'",
-    "prisma:reset": "npx prisma migrate reset && npx prisma migrate dev",
-    "prisma:gui": "npx prisma studio",
-    "prepare": "husky install"
   }
 }
