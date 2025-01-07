@@ -6,11 +6,13 @@
   "scripts": {
     "dev": "npx nodemon src/index.ts",
     "lint": "npx prettier --write 'src/**/*.ts' && npx eslint --fix 'src/**/*.ts'",
+    "prisma:erd": "npx prisma generate",
     "prisma:reset": "npx prisma migrate reset && npx prisma migrate dev",
     "prisma:gui": "npx prisma studio",
     "prepare": "husky install"
   },
   "devDependencies": {
+    "@mermaid-js/mermaid-cli": "^11.4.2",
     "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
@@ -22,10 +24,11 @@
     "eslint": "^9.17.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
-    "husky": "^8.0.0",
+    "husky": "^9.1.7",
     "lint-staged": "^15.2.11",
     "nodemon": "^3.1.9",
     "prettier": "^3.4.2",
+    "prisma-erd-generator": "^1.11.2",
     "ts-node": "^10.9.2",
     "tsc-watch": "^6.2.1",
     "typescript": "^5.7.2"
@@ -37,6 +40,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
     "jsonwebtoken": "^9.0.2",
     "node-cron": "^3.0.3",
     "prisma": "^6.0.1"

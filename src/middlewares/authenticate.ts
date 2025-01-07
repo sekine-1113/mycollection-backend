@@ -1,6 +1,7 @@
 import type express from 'express';
 import jwt from 'jsonwebtoken';
 import config from '../config';
+import { JWTBody } from '..';
 
 export const verifyToken = async (
   req: express.Request,
