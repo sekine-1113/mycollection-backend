@@ -1,9 +1,9 @@
 import prisma from '../prisma';
 
 export class UserRepository {
-  async findByLoginId(loginId: string) {
+  async findByEmail(email: string) {
     return prisma.user.findFirst({
-      where: { login_id: loginId },
+      where: { email },
     });
   }
 
@@ -14,9 +14,9 @@ export class UserRepository {
   }
 
   async createUser(data: {
-    login_id: string;
     password: string;
     username: string;
+    email: string;
     display_name: string | null;
   }) {
     return prisma.user.create({

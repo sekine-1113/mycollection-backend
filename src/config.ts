@@ -6,4 +6,5 @@ export default {
       expiresIn: '30m',
     },
   },
+  passwordSoltRounds: 10,
 };

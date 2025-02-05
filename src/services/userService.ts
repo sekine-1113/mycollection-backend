@@ -4,8 +4,8 @@ import bcrypt from 'bcrypt';
 export class UserService {
   private userRepository = new UserRepository();
 
-  async loginUser(loginId: string, rawPassword: string) {
-    const user = await this.userRepository.findByLoginId(loginId);
+  async loginUser(email: string, rawPassword: string) {
+    const user = await this.userRepository.findByEmail(email);
     if (!user) {
       throw new Error('User not found');
     }
@@ -19,16 +19,16 @@ export class UserService {
   }
 
   async registerUser(
-    loginId: string,
     rawPassword: string,
     username: string,
+    email: string,
     displayName: string | null,
   ) {
     const soltRounds = 10;
     const hashedPassword = await bcrypt.hash(rawPassword, soltRounds);
     return this.userRepository.createUser({
-      login_id: loginId,
       password: hashedPassword,
+      email: email,
       username: username,
       display_name: displayName,
     });

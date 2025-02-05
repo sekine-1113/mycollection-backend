@@ -12,11 +12,13 @@ userRouter.post(
   async (req: Request, res: Response, next: NextFunction) => {
     const {
       login_id: loginId,
+      email: email,
       password: rawPassword,
       username: username,
       display_name: displayName,
     }: {
       login_id: string;
+      email: string;
       password: string;
       username: string;
       display_name: string | null;
@@ -26,6 +28,7 @@ userRouter.post(
       loginId,
       rawPassword,
       username,
+      email,
       displayName,
     );
     res.status(201).send();
