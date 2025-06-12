@@ -5,20 +5,28 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator erd {
+  provider                  = "prisma-erd-generator"
+  theme                     = "forest"
+  output                    = "ERD.svg"
+  includeRelationFromFields = true
+  config                    = "mermaid-config.json"
+}
+
 datasource db {
   provider = "sqlite"
+  // provider = "mysql" or "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
   id           Int          @id @default(autoincrement())
   public_id    String       @unique @default(uuid())
-  login_id     String       @unique
-  email        String?      @unique
+  email        String       @unique
   username     String
   display_name String?
   password     String
-  permission   Int
+  permission   Int          @default(1)
   icon_url     String?      @default("")
   user_item    UserItem[]
   status       Status[]
@@ -40,6 +48,7 @@ model Category {
   name       String   @unique
   created_by User     @relation(fields: [user_id], references: [id])
   user_id    Int
+  item       Item[]
   is_public  Boolean  @default(true)
   is_active  Boolean  @default(true)
   is_deleted Boolean  @default(false)
@@ -53,7 +62,8 @@ model Item {
   name           String           @unique
   description    String?
   image_url      String?          @default("")
-  category_id    String
+  category       Category         @relation(fields: [category_id], references: [id])
+  category_id    Int
   users          UserItem[]
   collectionItem CollectionItem[]
   created_by     User             @relation(fields: [user_id], references: [id])
@@ -120,6 +130,14 @@ model CollectionItem {
   @@unique([collection_id, item_id])
 }
 
+model Tag {
+  id Int @id @default(autoincrement())
+}
+
+model ItemTag {
+  id Int @id @default(autoincrement())
+}
+
 model SystemLog {
   id         Int      @id @default(autoincrement())
   public_id  String   @unique @default(uuid())
@@ -141,3 +159,11 @@ model AccessLog {
   user_agent  String?
   created_at  DateTime @default(now())
 }
+
+// notifications
+// activity_log
+// session
+// comment
+// api_keys
+// 報告(通報)
+// ユーザ非表示

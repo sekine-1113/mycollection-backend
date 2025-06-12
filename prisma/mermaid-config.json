@@ -1,0 +1,9 @@
+{
+  "theme": "forest",
+  "themeVariables": {
+    "fontSize": "64px",
+    "primaryColor": "#ffcc00",
+    "witdh": "4096",
+    "height": "4096"
+  }
+}

@@ -11,13 +11,11 @@ userRouter.post(
   '/register',
   async (req: Request, res: Response, next: NextFunction) => {
     const {
-      login_id: loginId,
       email: email,
       password: rawPassword,
       username: username,
       display_name: displayName,
     }: {
-      login_id: string;
       email: string;
       password: string;
       username: string;
@@ -25,7 +23,6 @@ userRouter.post(
     } = req.body;
     if (rawPassword.length < 8) throw new HTTPException('BadRequest');
     const createdUser = await userService.registerUser(
-      loginId,
       rawPassword,
       username,
       email,

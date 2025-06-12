@@ -19,9 +19,7 @@ export class ItemRepository {
     category_id: string;
     user_id: number;
   }) {
-    return prisma.item.create({
-      data,
-    });
+    return prisma.item.create({ data });
   }
 
   async updateUser(
