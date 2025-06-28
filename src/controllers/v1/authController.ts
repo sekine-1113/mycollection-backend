@@ -6,10 +6,37 @@ import { UserService } from '../../services/userService';
 import { HTTPException } from '../../error';
 import { defineHandler } from '../../middlewares/handlers';
 import { AuthService } from '../../services/authService';
+import { validateRequest } from '../../middlewares/validate';
+import { RegisterUserSchema } from '../../schemas/userSchema';
+import z from 'zod';
 
 export const authRouter = express.Router();
 const userService = new UserService();
 const authService = new AuthService();
+
+authRouter.post(
+  '/signup',
+  validateRequest(RegisterUserSchema),
+  defineHandler(async (req: Request, res: Response) => {
+    const {
+      email: email,
+      password: rawPassword,
+      username: username,
+    } = res.locals.validatedBody as z.infer<typeof RegisterUserSchema.body>;
+    const createdUser = await userService.registerUser(
+      email,
+      rawPassword,
+      username,
+    );
+    if (!createdUser) {
+      throw new HTTPException('InternalServerError', {
+        detailMessage: 'ユーザ作成に失敗しました。',
+      });
+    }
+    res.status(201).json({});
+  }),
+);
+
 authRouter.post(
   '/login',
   defineHandler(async (req: Request, res: Response) => {
@@ -39,11 +66,10 @@ authRouter.post(
 );
 
 authRouter.post('/logout', verifyToken, async (req: Request, res: Response) => {
-  const decoded = req.body.decoded;
   res.cookie('token', null, {
     httpOnly: true,
     secure: true,
     sameSite: 'strict',
   });
-  res.status(200).json({ username: decoded.displayName, token: decoded.token });
+  res.status(204).json({});
 });

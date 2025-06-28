@@ -2,6 +2,7 @@ import type express from 'express';
 import jwt from 'jsonwebtoken';
 import config from '../config';
 import { HTTPException } from '../error';
+import { JWTBody } from '../types';
 
 export const verifyToken = async (
   req: express.Request,
@@ -17,7 +18,7 @@ export const verifyToken = async (
       });
     }
     const decoded = jwt.verify(bearer, config.jwt.secret);
-    req.body.decoded = decoded;
+    req.decoded = decoded as JWTBody;
     next();
   } catch (err) {
     if (err instanceof HTTPException) {

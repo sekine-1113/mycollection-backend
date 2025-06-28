@@ -20,150 +20,45 @@ datasource db {
 }
 
 model User {
-  id           Int          @id @default(autoincrement())
-  public_id    String       @unique @default(uuid())
-  email        String       @unique
-  username     String
+  id         Int            @id @default(autoincrement())
+  public_id  String         @unique @default(uuid())
+  email      String         @unique
+  username   String
+  password   String
+  permission UserPermission @default(USER)
+  created_at DateTime       @default(now())
+  updated_at DateTime       @updatedAt
+
+  profile UserProfile?
+  deleted DeletedUser?
+  logins  UserLoginLog[]
+}
+
+model UserProfile {
+  user_id      Int     @unique
+  icon_url     String?
   display_name String?
-  password     String
-  permission   Int          @default(1)
-  icon_url     String?      @default("")
-  user_item    UserItem[]
-  status       Status[]
-  item         Item[]
-  category     Category[]
-  collection   Collection[]
-  accessLog    AccessLog[]
-  is_public    Boolean      @default(true)
-  is_active    Boolean      @default(true)
-  is_deleted   Boolean      @default(false)
-  created_at   DateTime     @default(now())
-  updated_at   DateTime     @updatedAt
-  last_login   DateTime     @default(now())
+  is_public    Boolean @default(true)
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
-model Category {
-  id         Int      @id @default(autoincrement())
-  public_id  String   @unique @default(uuid())
-  name       String   @unique
-  created_by User     @relation(fields: [user_id], references: [id])
-  user_id    Int
-  item       Item[]
-  is_public  Boolean  @default(true)
-  is_active  Boolean  @default(true)
-  is_deleted Boolean  @default(false)
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+model DeletedUser {
+  user_id    Int      @unique
+  deleted_at DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
-model Item {
-  id             Int              @id @default(autoincrement())
-  public_id      String           @unique @default(uuid())
-  name           String           @unique
-  description    String?
-  image_url      String?          @default("")
-  category       Category         @relation(fields: [category_id], references: [id])
-  category_id    Int
-  users          UserItem[]
-  collectionItem CollectionItem[]
-  created_by     User             @relation(fields: [user_id], references: [id])
-  user_id        Int
-  is_public      Boolean          @default(true)
-  is_active      Boolean          @default(true)
-  is_deleted     Boolean          @default(false)
-  created_at     DateTime         @default(now())
-  updated_at     DateTime         @updatedAt
+model UserLoginLog {
+  id           Int      @id @default(autoincrement())
+  user_id      Int
+  logged_in_at DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
-model UserItem {
-  id         Int      @id @default(autoincrement())
-  public_id  String   @unique @default(uuid())
-  user       User     @relation(fields: [user_id], references: [id])
-  user_id    Int
-  item       Item     @relation(fields: [item_id], references: [id])
-  item_id    Int
-  status     Status   @relation(fields: [status_id], references: [id])
-  status_id  Int
-  notes      String?
-  is_public  Boolean  @default(true)
-  is_active  Boolean  @default(true)
-  is_deleted Boolean  @default(false)
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  @@unique([user_id, item_id])
+enum UserPermission {
+  USER
+  ADMIN
 }
-
-model Status {
-  id          Int        @id @default(autoincrement())
-  public_id   String     @unique @default(uuid())
-  name        String
-  description String?
-  user_item   UserItem[]
-  created_by  User       @relation(fields: [user_id], references: [id])
-  user_id     Int
-  created_at  DateTime   @default(now())
-  updated_at  DateTime   @updatedAt
-}
-
-model Collection {
-  id             Int              @id @default(autoincrement())
-  public_id      String           @unique @default(uuid())
-  name           String
-  user           User             @relation(fields: [user_id], references: [id])
-  user_id        Int
-  collectionItem CollectionItem[]
-  is_public      Boolean          @default(true)
-  created_at     DateTime         @default(now())
-  updated_at     DateTime         @updatedAt
-}
-
-model CollectionItem {
-  id            Int        @id @default(autoincrement())
-  public_id     String     @unique @default(uuid())
-  collection    Collection @relation(fields: [collection_id], references: [id])
-  collection_id Int
-  item          Item       @relation(fields: [item_id], references: [id])
-  item_id       Int
-  added_at      DateTime   @default(now())
-
-  @@unique([collection_id, item_id])
-}
-
-model Tag {
-  id Int @id @default(autoincrement())
-}
-
-model ItemTag {
-  id Int @id @default(autoincrement())
-}
-
-model SystemLog {
-  id         Int      @id @default(autoincrement())
-  public_id  String   @unique @default(uuid())
-  level      String
-  message    String
-  context    String?
-  created_at DateTime @default(now())
-}
-
-model AccessLog {
-  id          Int      @id @default(autoincrement())
-  public_id   String   @unique @default(uuid())
-  user        User     @relation(fields: [user_id], references: [id])
-  user_id     Int
-  ip_address  String   @default("")
-  url         String
-  method      String
-  status_code Int
-  user_agent  String?
-  created_at  DateTime @default(now())
-}
-
-// notifications
-// activity_log
-// session
-// comment
-// api_keys
-// 報告(通報)
-// ユーザ非表示

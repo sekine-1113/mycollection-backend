@@ -2,6 +2,7 @@ import jwt, { Secret, SignOptions } from 'jsonwebtoken';
 import config from '../config';
 import { HTTPException } from '../error';
 import { UserService } from './userService';
+import { JWTBody } from '../types';
 
 export class AuthService {
   private userService = new UserService();
@@ -17,7 +18,7 @@ export class AuthService {
         detailMessage: 'ログインに失敗しました。',
       });
     const token = jwt.sign(
-      { id: user.public_id, displayName: user.display_name ?? user.username },
+      { publicId: user.public_id } as JWTBody,
       config.jwt.secret as Secret,
       config.jwt.options as SignOptions,
     );

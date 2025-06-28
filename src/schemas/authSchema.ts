@@ -19,3 +19,15 @@ export const LoginUserSchema: SchemaType = {
     },
   },
 };
+
+export const LogoutUserSchema: SchemaType = {
+  params: z.object({}),
+  query: z.object({}),
+  body: z.object({}),
+  responses: {
+    204: {
+      description: 'Success',
+      body: z.object({}),
+    },
+  },
+};

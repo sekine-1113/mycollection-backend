@@ -1,4 +1,13 @@
 import z from 'zod';
+import jwt from 'jsonwebtoken';
+
+declare global {
+  namespace Express {
+    interface Request {
+      decoded?: JWTBody;
+    }
+  }
+}
 
 interface BaseJWTBody {
   iat: number;
@@ -6,8 +15,7 @@ interface BaseJWTBody {
 }
 
 export interface JWTBody extends BaseJWTBody {
-  id: number;
-  displayName: string;
+  publicId: string;
 }
 
 export type SchemaType = {
@@ -25,5 +33,6 @@ type Method = 'get' | 'post' | 'put' | 'delete';
 export type OpenAPISchemaType = {
   method: Method;
   path: string;
+  security: boolean;
   schema: SchemaType;
 };

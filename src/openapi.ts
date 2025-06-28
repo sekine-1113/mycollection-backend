@@ -6,7 +6,13 @@ import {
 import { openAPISchemas } from './openapi-schema';
 
 const registry = new OpenAPIRegistry();
-openAPISchemas.forEach(({ method, path, schema }) => {
+registry.registerComponent('securitySchemes', 'BearerAuth', {
+  type: 'http',
+  scheme: 'bearer',
+  bearerFormat: 'JWT',
+});
+
+openAPISchemas.forEach(({ method, path, security, schema }) => {
   const responses: {
     [statusCode: string]: ResponseConfig;
   } = {};
@@ -23,7 +29,7 @@ openAPISchemas.forEach(({ method, path, schema }) => {
   registry.registerPath({
     method,
     path,
-    operationId: `${method}_${path.replace(/\//g, '_')}`,
+    operationId: `${method.toUpperCase()}_${path.replace(/\//g, '_')}`,
     summary: `Operation for ${method} ${path}`,
     request: {
       params: schema.params,
@@ -36,13 +42,14 @@ openAPISchemas.forEach(({ method, path, schema }) => {
       },
     },
     responses: responses,
+    security: security ? [{ BearerAuth: [] }] : [],
   });
 });
 
 const generator = new OpenApiGeneratorV3(registry.definitions);
 export const openApiDocument = generator.generateDocument({
   info: {
-    title: 'TITLE',
+    title: 'test',
     version: '1.0.0',
   },
   openapi: '3.0.0',
