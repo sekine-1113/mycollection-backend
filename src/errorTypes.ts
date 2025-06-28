@@ -24,4 +24,4 @@ export const ErrorTypes = {
     errorCode: 500001,
     message: 'Internal Server Error',
   },
-} as const;
+} as const satisfies Record<string, object>;

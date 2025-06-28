@@ -24,8 +24,8 @@ export class UserService {
     email: string,
     displayName: string | null,
   ) {
-    const soltRounds = 10;
-    const hashedPassword = await bcrypt.hash(rawPassword, soltRounds);
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(rawPassword, saltRounds);
     return this.userRepository.createUser({
       password: hashedPassword,
       email: email,
@@ -35,8 +35,8 @@ export class UserService {
   }
 
   async updateUserPassword(userId: number, newPassword: string) {
-    const soltRounds = 10;
-    const hashedPassword = await bcrypt.hash(newPassword, soltRounds);
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
     return this.userRepository.updateUser(userId, { password: hashedPassword });
   }
 }

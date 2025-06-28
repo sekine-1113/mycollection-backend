@@ -16,7 +16,7 @@ export class ItemRepository {
   async createItem(data: {
     name: string;
     description: string | null;
-    category_id: string;
+    category_id: number;
     user_id: number;
   }) {
     return prisma.item.create({ data });
