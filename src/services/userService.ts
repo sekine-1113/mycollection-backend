@@ -1,3 +1,4 @@
+import config from '../config';
 import { UserRepository } from '../repositories/userRepository';
 import bcrypt from 'bcrypt';
 
@@ -7,12 +8,12 @@ export class UserService {
   async loginUser(email: string, rawPassword: string) {
     const user = await this.userRepository.findByEmail(email);
     if (!user) {
-      throw new Error('User not found');
+      return null;
     }
 
     const isPasswordValid = await bcrypt.compare(rawPassword, user.password);
     if (!isPasswordValid) {
-      throw new Error('Invalid password');
+      return null;
     }
     await this.userRepository.updateUserLastLogin(user.id);
     return user;
@@ -24,8 +25,10 @@ export class UserService {
     email: string,
     displayName: string | null,
   ) {
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(rawPassword, saltRounds);
+    const hashedPassword = await bcrypt.hash(
+      rawPassword,
+      config.passwordSaltRounds,
+    );
     return this.userRepository.createUser({
       password: hashedPassword,
       email: email,
@@ -35,8 +38,10 @@ export class UserService {
   }
 
   async updateUserPassword(userId: number, newPassword: string) {
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+    const hashedPassword = await bcrypt.hash(
+      newPassword,
+      config.passwordSaltRounds,
+    );
     return this.userRepository.updateUser(userId, { password: hashedPassword });
   }
 }

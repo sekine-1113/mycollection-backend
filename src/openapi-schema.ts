@@ -1,15 +1,8 @@
-import {
-  LoginUserSchema,
-  RegisterUserSchema,
-  SchemaType,
-} from './schemas/userSchema';
+import { LoginUserSchema } from './schemas/authSchema';
+import { RegisterUserSchema } from './schemas/userSchema';
+import { OpenAPISchemaType } from './types';
 
-type Method = 'get' | 'post' | 'put' | 'delete';
-export const openAPISchemas: {
-  method: Method;
-  path: string;
-  schema: SchemaType;
-}[] = [
+export const openAPISchemas: OpenAPISchemaType[] = [
   {
     method: 'post',
     path: '/user/register',

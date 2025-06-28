@@ -1,7 +1,7 @@
 import type express from 'express';
 import jwt from 'jsonwebtoken';
 import config from '../config';
-import { JWTBody } from '..';
+import { HTTPException } from '../error';
 
 export const verifyToken = async (
   req: express.Request,
@@ -12,15 +12,19 @@ export const verifyToken = async (
     const token = req.headers.authorization ?? '';
     const bearer = token.split(' ').at(-1) ?? '';
     if (!config.jwt.secret) {
-      res.status(500).json({ message: 'Sever error' });
-      return;
+      throw new HTTPException('InternalServerError', {
+        detailMessage: 'トークンの認証に失敗しました。',
+      });
     }
     const decoded = jwt.verify(bearer, config.jwt.secret);
     req.body.decoded = decoded;
     next();
   } catch (err) {
-    res.status(401).json({
-      message: 'Not authenticated',
+    if (err instanceof HTTPException) {
+      throw err;
+    }
+    throw new HTTPException('Unauthorized', {
+      detailMessage: 'トークンの認証に失敗しました。',
     });
   }
 };
@@ -34,8 +38,8 @@ export const checkPermission = async (
   if (permission == 1) {
     next();
   } else {
-    res.status(403).json({
-      message: 'Forbidden',
+    throw new HTTPException('Forbidden', {
+      detailMessage: '許可されていない操作が行われました。',
     });
   }
 };

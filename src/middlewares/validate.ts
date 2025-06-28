@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction, RequestHandler } from 'express';
-import { SchemaType } from '../schemas/userSchema';
+import { SchemaType } from '../types';
 
 export const validateRequest = (schema: SchemaType): RequestHandler => {
   return (req: Request, res: Response, next: NextFunction) => {
