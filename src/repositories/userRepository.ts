@@ -19,9 +19,13 @@ export class UserRepository {
     email: string;
     display_name: string | null;
   }) {
-    return prisma.user.create({
-      data,
-    });
+    try {
+      return await prisma.user.create({
+        data,
+      });
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   async updateUser(

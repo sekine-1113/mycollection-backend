@@ -12,13 +12,13 @@ authRouter.post(
   '/login',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { login_id: loginId, password: rawPassword } = req.body;
-      if (!loginId || !rawPassword) throw new HTTPException('BadRequest');
-      const user = await userService.loginUser(loginId, rawPassword);
+      const { email: email, password: rawPassword } = req.body;
+      if (!email || !rawPassword) throw new HTTPException('BadRequest');
+      const user = await userService.loginUser(email, rawPassword);
       if (!user) throw new HTTPException('NotFound');
       if (!config.jwt.secret) throw new HTTPException('InternalServerError');
       const token = jwt.sign(
-        { id: user.id, displayName: user.display_name ?? user.username },
+        { id: user.public_id, displayName: user.display_name ?? user.username },
         config.jwt.secret as Secret,
         config.jwt.options as SignOptions,
       );
