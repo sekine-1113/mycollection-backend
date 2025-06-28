@@ -16,16 +16,6 @@ import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
 import z from 'zod';
 extendZodWithOpenApi(z);
 
-interface BaseJWTBody {
-  iat: number;
-  exp: number;
-}
-
-export interface JWTBody extends BaseJWTBody {
-  id: number;
-  displayName: string;
-}
-
 cron.schedule('0 0 * * *', async () => deleteLogHandler(prisma));
 
 const apiLimiter = rateLimit({

@@ -5,10 +5,11 @@ import { verifyToken } from '../../middlewares/authenticate';
 import { UserService } from '../../services/userService';
 import { HTTPException } from '../../error';
 import { defineHandler } from '../../middlewares/handlers';
+import { AuthService } from '../../services/authService';
 
 export const authRouter = express.Router();
 const userService = new UserService();
-
+const authService = new AuthService();
 authRouter.post(
   '/login',
   defineHandler(async (req: Request, res: Response) => {
@@ -17,21 +18,8 @@ authRouter.post(
       throw new HTTPException('BadRequest', {
         detailMessage: 'email または password が入力されていません。',
       });
-    const user = await userService.loginUser(email, rawPassword);
-    if (!user)
-      throw new HTTPException('NotFound', {
-        detailMessage: 'email または password に誤りがあります。',
-      });
-    if (!config.jwt.secret)
-      throw new HTTPException('InternalServerError', {
-        detailMessage: 'ログインに失敗しました。',
-      });
     try {
-      const token = jwt.sign(
-        { id: user.public_id, displayName: user.display_name ?? user.username },
-        config.jwt.secret as Secret,
-        config.jwt.options as SignOptions,
-      );
+      const { token } = await authService.login(email, rawPassword);
       res.cookie('token', token, {
         httpOnly: true,
         secure: true,

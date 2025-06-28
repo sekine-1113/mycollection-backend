@@ -2,7 +2,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import { UserService } from '../../services/userService';
 import { HTTPException } from '../../error';
 import { verifyToken } from '../../middlewares/authenticate';
-import { JWTBody } from '../..';
+import { JWTBody } from '../../types';
 import { validateRequest } from '../../middlewares/validate';
 import { RegisterUserSchema } from '../../schemas/userSchema';
 import { z } from 'zod';

@@ -1,6 +1,17 @@
-const devConfig = {
+type ConfigType = {
   jwt: {
-    secret: process.env.JWT_SECRET,
+    secret: string;
+    options: {
+      algorithm: 'HS256';
+      expiresIn: string;
+    };
+  };
+  passwordSaltRounds: number;
+};
+
+const devConfig: ConfigType = {
+  jwt: {
+    secret: process.env.JWT_SECRET ?? 'devsecret',
     options: {
       algorithm: 'HS256',
       expiresIn: '30m',
@@ -9,9 +20,9 @@ const devConfig = {
   passwordSaltRounds: 10,
 };
 
-const prodConfig = {
+const prodConfig: ConfigType = {
   jwt: {
-    secret: process.env.JWT_SECRET,
+    secret: process.env.JWT_SECRET ?? 'prodsecret',
     options: {
       algorithm: 'HS256',
       expiresIn: '30m',
