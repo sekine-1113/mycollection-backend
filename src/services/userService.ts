@@ -1,9 +1,19 @@
 import config from '../config';
+import { UserProfileRepository } from '../repositories/userProfileRepository';
 import { UserRepository } from '../repositories/userRepository';
 import bcrypt from 'bcrypt';
 
 export class UserService {
   private userRepository = new UserRepository();
+  private userProfileRepository = new UserProfileRepository();
+
+  async findAll() {
+    return await this.userRepository.findAll();
+  }
+
+  async findByPublicId(publicId: string) {
+    return await this.userRepository.findByPublicId(publicId);
+  }
 
   async loginUser(email: string, rawPassword: string) {
     const user = await this.userRepository.findByEmail(email);
@@ -15,26 +25,24 @@ export class UserService {
     if (!isPasswordValid) {
       return null;
     }
-    await this.userRepository.updateUserLastLogin(user.id);
+    await this.userRepository.loggedInUser(user.id);
     return user;
   }
 
-  async registerUser(
-    rawPassword: string,
-    username: string,
-    email: string,
-    displayName: string | null,
-  ) {
+  async registerUser(email: string, rawPassword: string, username: string) {
     const hashedPassword = await bcrypt.hash(
       rawPassword,
       config.passwordSaltRounds,
     );
-    return this.userRepository.createUser({
-      password: hashedPassword,
+    return await this.userRepository.createUser({
       email: email,
+      password: hashedPassword,
       username: username,
-      display_name: displayName,
     });
+  }
+
+  async deleteUser(userId: number) {
+    return await this.userRepository.deleteUser(userId);
   }
 
   async updateUserPassword(userId: number, newPassword: string) {
@@ -42,6 +50,27 @@ export class UserService {
       newPassword,
       config.passwordSaltRounds,
     );
-    return this.userRepository.updateUser(userId, { password: hashedPassword });
+    return await this.userRepository.updateUser(userId, {
+      password: hashedPassword,
+    });
+  }
+
+  async createProfile(data: {
+    user_id: number;
+    icon_url: string | null;
+    display_name: string | null;
+  }) {
+    return await this.userProfileRepository.createUserProfile(data);
+  }
+
+  async updateProfile(
+    userId: number,
+    data: Partial<{
+      icon_url: string;
+      display_name: string;
+      is_public: boolean;
+    }>,
+  ) {
+    return await this.userProfileRepository.updateUserProfile(userId, data);
   }
 }
