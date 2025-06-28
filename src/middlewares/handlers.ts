@@ -1,6 +1,18 @@
 import type { PrismaClient } from '@prisma/client';
 import { HTTPException } from '../error';
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction, RequestHandler } from 'express';
+
+export const defineHandler =
+  (
+    handler: (
+      req: Request,
+      res: Response,
+      next?: NextFunction,
+    ) => Promise<unknown>,
+  ): RequestHandler =>
+  (req, res, next) => {
+    handler(req, res, next).catch(next);
+  };
 
 export const loggingHandler = (
   req: Request,
@@ -27,7 +39,6 @@ export const loggingHandler = (
   }
   next();
 };
-const defineHandler = null;
 
 export const errorHandler = (
   err: HTTPException,
