@@ -6,6 +6,7 @@ import { JWTBody } from '../..';
 import { validateRequest } from '../../middlewares/validate';
 import { RegisterUserSchema } from '../../schemas/userSchema';
 import { z } from 'zod';
+import { defineHandler } from '../../middlewares/handlers';
 
 export const userRouter = express.Router();
 const userService = new UserService();
@@ -13,7 +14,7 @@ const userService = new UserService();
 userRouter.post(
   '/register',
   validateRequest(RegisterUserSchema),
-  async (req: Request, res: Response, next: NextFunction) => {
+  defineHandler(async (req: Request, res: Response) => {
     const {
       email: email,
       password: rawPassword,
@@ -27,18 +28,19 @@ userRouter.post(
       displayName,
     );
     if (!createdUser) {
-      res.status(500).send();
-      return;
+      throw new HTTPException('InternalServerError', {
+        detailMessage: 'ユーザ作成に失敗しました。',
+      });
     }
-    res.status(201).send();
-  },
+    res.status(201).json({});
+  }),
 );
 
 userRouter.get(
   '/mypage',
   verifyToken,
-  async (req: Request, res: Response, next: NextFunction) => {
+  defineHandler(async (req: Request, res: Response) => {
     const decoded: JWTBody = req.body.decoded;
     res.status(200).json({ decoded });
-  },
+  }),
 );

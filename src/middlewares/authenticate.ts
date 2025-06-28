@@ -30,8 +30,8 @@ export const checkPermission = async (
   res: express.Response,
   next: express.NextFunction,
 ): Promise<void> => {
-  const permisson = req.body.decoded.permission;
-  if (permisson == 1) {
+  const permission = req.body.decoded.permission;
+  if (permission == 1) {
     next();
   } else {
     res.status(403).json({
