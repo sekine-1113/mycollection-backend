@@ -13,7 +13,7 @@ export const defineHandler =
     handler(req, res, next).catch(next);
   };
 
-export const loggingHandler = (
+export const debugHandler = (
   req: Request,
   res: Response,
   next: NextFunction,
