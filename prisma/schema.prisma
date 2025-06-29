@@ -21,13 +21,13 @@ datasource db {
 
 model User {
   id         Int            @id @default(autoincrement())
-  public_id  String         @unique @default(uuid())
+  publicId   String         @unique @default(uuid()) @map("public_id")
   email      String         @unique
   username   String
   password   String
   permission UserPermission @default(USER)
-  created_at DateTime       @default(now())
-  updated_at DateTime       @updatedAt
+  createdAt  DateTime       @default(now()) @map("created_at")
+  updatedAt  DateTime       @updatedAt @map("updated_at")
 
   profile UserProfile?
   deleted DeletedUser?
@@ -35,27 +35,27 @@ model User {
 }
 
 model UserProfile {
-  user_id      Int     @unique
-  icon_url     String?
-  display_name String?
-  is_public    Boolean @default(true)
+  userId      Int     @unique @map("user_id")
+  iconUrl     String? @map("icon_url")
+  displayName String? @map("display_name")
+  isPublic    Boolean @default(true) @map("is_public")
 
-  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model DeletedUser {
-  user_id    Int      @unique
-  deleted_at DateTime @default(now())
+  userId    Int      @unique @map("user_id")
+  deletedAt DateTime @default(now()) @map("deleted_at")
 
-  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model UserLoginLog {
-  id           Int      @id @default(autoincrement())
-  user_id      Int
-  logged_in_at DateTime @default(now())
+  id         Int      @id @default(autoincrement())
+  userId     Int      @map("user_id")
+  loggedInAt DateTime @default(now()) @map("logged_in_at")
 
-  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum UserPermission {

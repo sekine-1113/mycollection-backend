@@ -13,12 +13,8 @@ export class AuthService {
       throw new HTTPException('NotFound', {
         detailMessage: 'email または password に誤りがあります。',
       });
-    if (!config.jwt.secret)
-      throw new HTTPException('InternalServerError', {
-        detailMessage: 'ログインに失敗しました。',
-      });
     const token = jwt.sign(
-      { publicId: user.public_id } as JWTBody,
+      { publicId: user.publicId } as JWTBody,
       config.jwt.secret as Secret,
       config.jwt.options as SignOptions,
     );

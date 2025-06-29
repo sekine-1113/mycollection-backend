@@ -1,9 +1,7 @@
-import express, { Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { UserService } from '../../services/userService';
 import { HTTPException } from '../../error';
-import { verifyToken } from '../../middlewares/authenticate';
 import { JWTBody } from '../../types';
-import { validateRequest } from '../../middlewares/validate';
 import {
   CreateUserProfileSchema,
   DetailUserSchema,
@@ -12,33 +10,27 @@ import {
 import { z } from 'zod';
 import { defineHandler } from '../../middlewares/handlers';
 
-export const userRouter = express.Router();
 const userService = new UserService();
 
-userRouter.get(
-  '/',
-  verifyToken,
-  defineHandler(async (req: Request, res: Response) => {
+export const usersHandler = defineHandler(
+  async (req: Request, res: Response) => {
     const users = await userService.findAll();
     res.status(200).json({
       list: users.map((it) => ({
-        user_public_id: it.public_id,
-        icon_url: it.profile?.icon_url,
-        display_name: it.profile?.display_name,
-        is_public: it.profile?.is_public,
-        logins: it.profile?.is_public
-          ? it.logins.map((login) => login.logged_in_at)
+        user_public_id: it.publicId,
+        icon_url: it.profile?.iconUrl,
+        display_name: it.profile?.displayName,
+        is_public: it.profile?.isPublic,
+        logins: it.profile?.isPublic
+          ? it.logins.map((login) => login.loggedInAt)
           : [],
       })),
     });
-  }),
+  },
 );
 
-userRouter.get(
-  '/:publicId',
-  verifyToken,
-  validateRequest(DetailUserSchema),
-  defineHandler(async (req: Request, res: Response) => {
+export const userDetailHandler = defineHandler(
+  async (req: Request, res: Response) => {
     const decoded = req.decoded as JWTBody;
     const { publicId } = req.validatedParams as z.infer<
       typeof DetailUserSchema.params
@@ -48,22 +40,19 @@ userRouter.get(
       throw new HTTPException('NotFound');
     }
     res.status(200).json({
-      user_public_id: user.public_id,
-      icon_url: user.profile?.icon_url,
-      display_name: user.profile?.display_name,
-      is_public: user.profile?.is_public,
-      logins: user.profile?.is_public
-        ? user.logins.map((login) => login.logged_in_at)
+      user_public_id: user.publicId,
+      icon_url: user.profile?.iconUrl,
+      display_name: user.profile?.displayName,
+      is_public: user.profile?.isPublic,
+      logins: user.profile?.isPublic
+        ? user.logins.map((login) => login.loggedInAt)
         : [],
-    });
-  }),
+    } as z.infer<(typeof DetailUserSchema.responses)['200']['body']>);
+  },
 );
 
-userRouter.post(
-  '/:publicId',
-  verifyToken,
-  validateRequest(CreateUserProfileSchema),
-  defineHandler(async (req: Request, res: Response) => {
+export const createUserProfileHandler = defineHandler(
+  async (req: Request, res: Response) => {
     const decoded = req.decoded as JWTBody;
     const { publicId } = req.validatedParams as z.infer<
       typeof CreateUserProfileSchema.params
@@ -73,27 +62,23 @@ userRouter.post(
         detailMessage: '許可されていません。',
       });
     }
-    const { icon_url, display_name } = req.validatedBody as z.infer<
-      typeof CreateUserProfileSchema.body
-    >;
+    const { icon_url: iconUrl, display_name: displayName } =
+      req.validatedBody as z.infer<typeof CreateUserProfileSchema.body>;
     const user = await userService.findByPublicId(decoded.publicId);
     if (!user) {
       throw new HTTPException('NotFound');
     }
     const profile = await userService.createProfile({
-      user_id: user.id,
-      icon_url,
-      display_name,
+      userId: user.id,
+      iconUrl,
+      displayName,
     });
     res.status(200).json({ decoded, profile });
-  }),
+  },
 );
 
-userRouter.put(
-  '/:publicId',
-  verifyToken,
-  validateRequest(UpdateUserProfileSchema),
-  defineHandler(async (req: Request, res: Response) => {
+export const updateUserProfileHandler = defineHandler(
+  async (req: Request, res: Response) => {
     const decoded = req.decoded as JWTBody;
     const { publicId } = req.validatedParams as z.infer<
       typeof UpdateUserProfileSchema.params
@@ -103,18 +88,20 @@ userRouter.put(
         detailMessage: '許可されていません。',
       });
     }
-    const { icon_url, display_name, is_public } = req.validatedBody as z.infer<
-      typeof UpdateUserProfileSchema.body
-    >;
+    const {
+      icon_url: iconUrl,
+      display_name: displayName,
+      is_public: isPublic,
+    } = req.validatedBody as z.infer<typeof UpdateUserProfileSchema.body>;
     const user = await userService.findByPublicId(decoded.publicId);
     if (!user) {
       throw new HTTPException('NotFound');
     }
     const profile = await userService.updateProfile(user.id, {
-      icon_url,
-      display_name,
-      is_public,
+      iconUrl,
+      displayName,
+      isPublic,
     });
     res.status(200).json({ decoded, profile });
-  }),
+  },
 );

@@ -22,7 +22,7 @@ export class UserRepository {
 
   async findByPublicId(publicId: string) {
     return prisma.user.findFirst({
-      where: { public_id: publicId },
+      where: { publicId },
       include: {
         profile: true,
         logins: true,
@@ -57,7 +57,7 @@ export class UserRepository {
   async loggedInUser(userId: number) {
     return await prisma.userLoginLog.create({
       data: {
-        user_id: userId,
+        userId,
       },
     });
   }
@@ -65,7 +65,7 @@ export class UserRepository {
   async deleteUser(userId: number) {
     return await prisma.deletedUser.create({
       data: {
-        user_id: userId,
+        userId,
       },
     });
   }

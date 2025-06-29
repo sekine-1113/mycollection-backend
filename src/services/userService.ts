@@ -56,9 +56,9 @@ export class UserService {
   }
 
   async createProfile(data: {
-    user_id: number;
-    icon_url: string | null;
-    display_name: string | null;
+    userId: number;
+    iconUrl: string | null;
+    displayName: string | null;
   }) {
     return await this.userProfileRepository.createUserProfile(data);
   }
@@ -66,9 +66,9 @@ export class UserService {
   async updateProfile(
     userId: number,
     data: Partial<{
-      icon_url: string;
-      display_name: string;
-      is_public: boolean;
+      iconUrl: string;
+      displayName: string;
+      isPublic: boolean;
     }>,
   ) {
     return await this.userProfileRepository.updateUserProfile(userId, data);
