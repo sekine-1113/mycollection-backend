@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { UserService } from '../../user/service/userService';
+import { UserService } from '../../users/service/userService';
 import { HTTPException } from '../../error';
 import { defineHandler } from '../../middlewares/handlers';
 import { AuthService } from '../service/authService';
@@ -72,4 +72,8 @@ export const signOutHandler = defineHandler(
     });
     res.status(204).json({});
   },
+);
+
+export const refreshHandler = defineHandler(
+  async (req: Request, res: Response) => {},
 );

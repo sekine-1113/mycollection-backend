@@ -19,6 +19,7 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.7",
+    "@types/multer": "^1.4.13",
     "@types/node": "^24.0.3",
     "@types/node-cron": "^3.0.11",
     "@types/swagger-ui-express": "^4.1.8",
@@ -32,7 +33,6 @@
     "nodemon": "^3.1.9",
     "prettier": "^3.4.2",
     "prisma-erd-generator": "^2.0.4",
-    "prisma-zod-generator": "^0.8.13",
     "swagger-ui-express": "^5.0.1",
     "ts-node": "^10.9.2",
     "tsc-watch": "^7.1.1",
@@ -42,14 +42,17 @@
     "@prisma/client": "^6.0.1",
     "bcrypt": "^6.0.0",
     "body-parser": "^2.2.0",
+    "cloudinary": "^2.7.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
     "express-rate-limit": "^7.5.0",
     "jsonwebtoken": "^9.0.2",
+    "multer": "^2.0.1",
     "node-cron": "^4.1.1",
     "prisma": "^6.0.1",
+    "sanitize-html": "^2.17.0",
     "zod": "^3.25.67"
   }
 }

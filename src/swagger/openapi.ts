@@ -4,6 +4,7 @@ import {
   ResponseConfig,
 } from '@asteasolutions/zod-to-openapi';
 import { openAPISchemas } from './openapi-schema';
+import config from '../config';
 
 const registry = new OpenAPIRegistry();
 registry.registerComponent('securitySchemes', 'BearerAuth', {
@@ -56,7 +57,7 @@ export const openApiDocument = generator.generateDocument({
   openapi: '3.0.0',
   servers: [
     {
-      url: 'http://localhost:3000/api/v1',
+      url: `${config.DOMAIN}:${config.PORT}/api/v1`,
     },
   ],
 });

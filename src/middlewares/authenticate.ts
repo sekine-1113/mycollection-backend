@@ -10,11 +10,6 @@ export const verifyToken = async (
   next: express.NextFunction,
 ): Promise<void> => {
   let token;
-  if (!config.jwt.secret) {
-    throw new HTTPException('InternalServerError', {
-      detailMessage: 'トークンの認証に失敗しました。',
-    });
-  }
   if (req.cookies && req.cookies.token) {
     token = req.cookies.token;
   }
@@ -25,7 +20,7 @@ export const verifyToken = async (
     throw new HTTPException('Unauthorized');
   }
   try {
-    const decoded = jwt.verify(token, config.jwt.secret);
+    const decoded = jwt.verify(token, config.ACCESS_SECRET);
     req.decoded = decoded as JWTBody;
     next();
   } catch (err) {
@@ -38,13 +33,13 @@ export const verifyToken = async (
   }
 };
 
-export const checkPermission = async (
+export const isAdmin = async (
   req: express.Request,
   res: express.Response,
   next: express.NextFunction,
 ): Promise<void> => {
-  const permission = req.body.decoded.permission;
-  if (permission == 1) {
+  const permission = req.decoded?.permission;
+  if (permission === 'ADMIN') {
     next();
   } else {
     throw new HTTPException('Forbidden', {

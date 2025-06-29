@@ -3,7 +3,7 @@ import {
   DetailUserSchema,
   ListUserSchema,
   UpdateUserProfileSchema,
-} from '../../user/schema/userSchema';
+} from '../../users/schema/userSchema';
 import { Method, SchemaType } from '../../types';
 import { createEndpoint } from '../../utils';
 

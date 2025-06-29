@@ -1,34 +1,38 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 type ConfigType = {
-  jwt: {
-    secret: string;
-    options: {
-      algorithm: 'HS256';
-      expiresIn: string;
-    };
-  };
-  passwordSaltRounds: number;
+  DOMAIN: string;
+  PORT: number;
+  DATABASE_URL: string;
+  ACCESS_SECRET: string;
+  REFRESH_SECRET: string;
+  PASSWORD_SALT_ROUNDS: number;
+  CLOUDINARY_CLOUD_NAME: string;
+  CLOUDINARY_API_KEY: string;
+  CLOUDINARY_API_SECRET: string;
 };
 
 const devConfig: ConfigType = {
-  jwt: {
-    secret: process.env.JWT_SECRET ?? 'devsecret',
-    options: {
-      algorithm: 'HS256',
-      expiresIn: '30m',
-    },
-  },
-  passwordSaltRounds: 10,
+  DOMAIN: process.env.DOMAIN ?? 'http://localhost',
+  PORT: parseInt(process.env.PORT ?? '3000'),
+  DATABASE_URL: process.env.DATABASE_URL ?? 'file:./dev.db',
+  ACCESS_SECRET: process.env.ACCESS_SECRET ?? 'devsecret',
+  REFRESH_SECRET: process.env.REFRESH_SECRET ?? 'devrefsecret',
+  PASSWORD_SALT_ROUNDS: parseInt(process.env.PASSWORD_SALT_ROUNDS ?? '10'),
+  CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME!,
+  CLOUDINARY_API_KEY: process.env.CLOUDINARY_CLOUD_NAME!,
+  CLOUDINARY_API_SECRET: process.env.CLOUDINARY_CLOUD_NAME!,
 };
 
 const prodConfig: ConfigType = {
-  jwt: {
-    secret: process.env.JWT_SECRET ?? 'prodsecret',
-    options: {
-      algorithm: 'HS256',
-      expiresIn: '30m',
-    },
-  },
-  passwordSaltRounds: 10,
+  DOMAIN: process.env.DOMAIN ?? 'http://localhost',
+  PORT: parseInt(process.env.PORT ?? '3000'),
+  DATABASE_URL: process.env.DATABASE_URL ?? 'file:./dev.db',
+  ACCESS_SECRET: process.env.ACCESS_SECRET ?? 'prodsecret',
+  REFRESH_SECRET: process.env.REFRESH_SECRET ?? 'prodrefsecret',
+  PASSWORD_SALT_ROUNDS: parseInt(process.env.PASSWORD_SALT_ROUNDS ?? '10'),
+  CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME!,
+  CLOUDINARY_API_KEY: process.env.CLOUDINARY_CLOUD_NAME!,
+  CLOUDINARY_API_SECRET: process.env.CLOUDINARY_CLOUD_NAME!,
 };
 
 const config =
