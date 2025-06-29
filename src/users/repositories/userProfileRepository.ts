@@ -1,4 +1,4 @@
-import prisma from '../../prisma';
+import prisma from '../../lib/prisma';
 
 export class UserProfileRepository {
   async findByUserId(userId: number) {
