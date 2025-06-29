@@ -27,7 +27,7 @@ export class UserProfileRepository {
       icon_url: string;
       display_name: string;
       is_public: boolean;
-    }>,
+    }>
   ) {
     return prisma.userProfile.update({
       where: { user_id: userId },

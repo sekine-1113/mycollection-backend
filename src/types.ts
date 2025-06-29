@@ -1,10 +1,12 @@
 import z from 'zod';
-import jwt from 'jsonwebtoken';
 
 declare global {
   namespace Express {
     interface Request {
       decoded?: JWTBody;
+      validatedBody?: { [key: string]: unknown };
+      validatedParams?: { [key: string]: unknown };
+      validatedQuery?: { [key: string]: unknown };
     }
   }
 }

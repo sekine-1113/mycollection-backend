@@ -20,7 +20,7 @@ export class AuthService {
     const token = jwt.sign(
       { publicId: user.public_id } as JWTBody,
       config.jwt.secret as Secret,
-      config.jwt.options as SignOptions,
+      config.jwt.options as SignOptions
     );
     return { token };
   }

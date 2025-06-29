@@ -24,9 +24,9 @@ export const validateRequest = (schema: SchemaType): RequestHandler => {
       return;
     }
 
-    res.locals.validatedBody = bodyResult.data;
-    res.locals.validatedParams = paramsResult.data;
-    res.locals.validatedQuery = queriesResult.data;
+    req.validatedBody = bodyResult.data;
+    req.validatedParams = paramsResult.data;
+    req.validatedQuery = queriesResult.data;
 
     next();
   };

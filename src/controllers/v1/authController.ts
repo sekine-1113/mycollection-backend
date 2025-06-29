@@ -1,6 +1,4 @@
-import express, { NextFunction, Request, Response } from 'express';
-import jwt, { Secret, SignOptions } from 'jsonwebtoken';
-import config from '../../config';
+import express, { Request, Response } from 'express';
 import { verifyToken } from '../../middlewares/authenticate';
 import { UserService } from '../../services/userService';
 import { HTTPException } from '../../error';
@@ -9,6 +7,7 @@ import { AuthService } from '../../services/authService';
 import { validateRequest } from '../../middlewares/validate';
 import { RegisterUserSchema } from '../../schemas/userSchema';
 import z from 'zod';
+import { LoginUserSchema } from '../../schemas/authSchema';
 
 export const authRouter = express.Router();
 const userService = new UserService();
@@ -22,11 +21,11 @@ authRouter.post(
       email: email,
       password: rawPassword,
       username: username,
-    } = res.locals.validatedBody as z.infer<typeof RegisterUserSchema.body>;
+    } = req.validatedBody as z.infer<typeof RegisterUserSchema.body>;
     const createdUser = await userService.registerUser(
       email,
       rawPassword,
-      username,
+      username
     );
     if (!createdUser) {
       throw new HTTPException('InternalServerError', {
@@ -34,13 +33,15 @@ authRouter.post(
       });
     }
     res.status(201).json({});
-  }),
+  })
 );
 
 authRouter.post(
   '/login',
+  validateRequest(LoginUserSchema),
   defineHandler(async (req: Request, res: Response) => {
-    const { email: email, password: rawPassword } = req.body;
+    const { email: email, password: rawPassword } =
+      req.validatedBody as z.infer<typeof LoginUserSchema.body>;
     if (!email || !rawPassword)
       throw new HTTPException('BadRequest', {
         detailMessage: 'email または password が入力されていません。',
@@ -62,7 +63,7 @@ authRouter.post(
         detailMessage: 'ログイン処理中にエラーが発生しました。',
       });
     }
-  }),
+  })
 );
 
 authRouter.post('/logout', verifyToken, async (req: Request, res: Response) => {

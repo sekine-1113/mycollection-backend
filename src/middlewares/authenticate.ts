@@ -7,7 +7,7 @@ import { JWTBody } from '../types';
 export const verifyToken = async (
   req: express.Request,
   res: express.Response,
-  next: express.NextFunction,
+  next: express.NextFunction
 ): Promise<void> => {
   try {
     const token = req.headers.authorization ?? '';
@@ -33,7 +33,7 @@ export const verifyToken = async (
 export const checkPermission = async (
   req: express.Request,
   res: express.Response,
-  next: express.NextFunction,
+  next: express.NextFunction
 ): Promise<void> => {
   const permission = req.body.decoded.permission;
   if (permission == 1) {

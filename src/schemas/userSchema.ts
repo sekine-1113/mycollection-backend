@@ -17,7 +17,7 @@ export const ListUserSchema: SchemaType = {
             icon_url: z.string().optional(),
             display_name: z.string().optional(),
             is_public: z.boolean(),
-          }),
+          })
         ),
       }),
     },

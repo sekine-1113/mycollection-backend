@@ -1,4 +1,3 @@
-import type { PrismaClient } from '@prisma/client';
 import { HTTPException } from '../error';
 import { Request, Response, NextFunction, RequestHandler } from 'express';
 
@@ -8,7 +7,7 @@ export const defineHandler =
       req: Request,
       res: Response,
       next?: NextFunction,
-    ) => Promise<unknown>,
+    ) => Promise<unknown>
   ): RequestHandler =>
   (req, res, next) => {
     handler(req, res, next).catch(next);
@@ -17,7 +16,7 @@ export const defineHandler =
 export const loggingHandler = (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   const method = req.method;
   switch (method.toLowerCase()) {
@@ -44,7 +43,7 @@ export const errorHandler = (
   err: HTTPException,
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   res
     .status(err.statusCode ?? 500)

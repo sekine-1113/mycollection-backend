@@ -46,7 +46,7 @@ export class UserRepository {
 
   async updateUser(
     id: number,
-    data: Partial<{ username: string; password: string }>,
+    data: Partial<{ username: string; password: string }>
   ) {
     return prisma.user.update({
       where: { id },
