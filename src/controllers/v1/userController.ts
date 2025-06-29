@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 import { UserService } from '../../services/userService';
 import { HTTPException } from '../../error';
 import { verifyToken } from '../../middlewares/authenticate';
@@ -7,7 +7,6 @@ import { validateRequest } from '../../middlewares/validate';
 import {
   CreateUserProfileSchema,
   DetailUserSchema,
-  RegisterUserSchema,
   UpdateUserProfileSchema,
 } from '../../schemas/userSchema';
 import { z } from 'zod';
@@ -41,7 +40,7 @@ userRouter.get(
   validateRequest(DetailUserSchema),
   defineHandler(async (req: Request, res: Response) => {
     const decoded = req.decoded as JWTBody;
-    const { publicId } = res.locals.validatedParams as z.infer<
+    const { publicId } = req.validatedParams as z.infer<
       typeof DetailUserSchema.params
     >;
     const user = await userService.findByPublicId(publicId);
@@ -66,7 +65,7 @@ userRouter.post(
   validateRequest(CreateUserProfileSchema),
   defineHandler(async (req: Request, res: Response) => {
     const decoded = req.decoded as JWTBody;
-    const { publicId } = res.locals.validatedParams as z.infer<
+    const { publicId } = req.validatedParams as z.infer<
       typeof CreateUserProfileSchema.params
     >;
     if (decoded.publicId !== publicId) {
@@ -74,7 +73,7 @@ userRouter.post(
         detailMessage: '許可されていません。',
       });
     }
-    const { icon_url, display_name } = res.locals.validatedBody as z.infer<
+    const { icon_url, display_name } = req.validatedBody as z.infer<
       typeof CreateUserProfileSchema.body
     >;
     const user = await userService.findByPublicId(decoded.publicId);
@@ -96,7 +95,7 @@ userRouter.put(
   validateRequest(UpdateUserProfileSchema),
   defineHandler(async (req: Request, res: Response) => {
     const decoded = req.decoded as JWTBody;
-    const { publicId } = res.locals.validatedParams as z.infer<
+    const { publicId } = req.validatedParams as z.infer<
       typeof UpdateUserProfileSchema.params
     >;
     if (decoded.publicId !== publicId) {
@@ -104,8 +103,9 @@ userRouter.put(
         detailMessage: '許可されていません。',
       });
     }
-    const { icon_url, display_name, is_public } = res.locals
-      .validatedBody as z.infer<typeof UpdateUserProfileSchema.body>;
+    const { icon_url, display_name, is_public } = req.validatedBody as z.infer<
+      typeof UpdateUserProfileSchema.body
+    >;
     const user = await userService.findByPublicId(decoded.publicId);
     if (!user) {
       throw new HTTPException('NotFound');

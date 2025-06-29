@@ -1,4 +1,3 @@
-import type { PrismaClient } from '@prisma/client';
 import { HTTPException } from '../error';
 import { Request, Response, NextFunction, RequestHandler } from 'express';
 
