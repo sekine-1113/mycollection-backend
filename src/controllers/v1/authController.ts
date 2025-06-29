@@ -25,7 +25,7 @@ authRouter.post(
     const createdUser = await userService.registerUser(
       email,
       rawPassword,
-      username
+      username,
     );
     if (!createdUser) {
       throw new HTTPException('InternalServerError', {
@@ -33,7 +33,7 @@ authRouter.post(
       });
     }
     res.status(201).json({});
-  })
+  }),
 );
 
 authRouter.post(
@@ -63,7 +63,7 @@ authRouter.post(
         detailMessage: 'ログイン処理中にエラーが発生しました。',
       });
     }
-  })
+  }),
 );
 
 authRouter.post('/logout', verifyToken, async (req: Request, res: Response) => {

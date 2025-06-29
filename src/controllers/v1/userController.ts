@@ -31,7 +31,7 @@ userRouter.get(
           : [],
       })),
     });
-  })
+  }),
 );
 
 userRouter.get(
@@ -56,7 +56,7 @@ userRouter.get(
         ? user.logins.map((login) => login.logged_in_at)
         : [],
     });
-  })
+  }),
 );
 
 userRouter.post(
@@ -86,7 +86,7 @@ userRouter.post(
       display_name,
     });
     res.status(200).json({ decoded, profile });
-  })
+  }),
 );
 
 userRouter.put(
@@ -116,5 +116,5 @@ userRouter.put(
       is_public,
     });
     res.status(200).json({ decoded, profile });
-  })
+  }),
 );

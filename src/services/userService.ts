@@ -32,7 +32,7 @@ export class UserService {
   async registerUser(email: string, rawPassword: string, username: string) {
     const hashedPassword = await bcrypt.hash(
       rawPassword,
-      config.passwordSaltRounds
+      config.passwordSaltRounds,
     );
     return await this.userRepository.createUser({
       email: email,
@@ -48,7 +48,7 @@ export class UserService {
   async updateUserPassword(userId: number, newPassword: string) {
     const hashedPassword = await bcrypt.hash(
       newPassword,
-      config.passwordSaltRounds
+      config.passwordSaltRounds,
     );
     return await this.userRepository.updateUser(userId, {
       password: hashedPassword,
@@ -69,7 +69,7 @@ export class UserService {
       icon_url: string;
       display_name: string;
       is_public: boolean;
-    }>
+    }>,
   ) {
     return await this.userProfileRepository.updateUserProfile(userId, data);
   }
