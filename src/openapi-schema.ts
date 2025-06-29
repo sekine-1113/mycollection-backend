@@ -41,13 +41,13 @@ export const openAPISchemas: OpenAPISchemaType[] = [
   },
   {
     method: 'post',
-    path: '/auth/login',
+    path: '/auth/signin',
     security: false,
     schema: LoginUserSchema,
   },
   {
     method: 'post',
-    path: '/auth/logout',
+    path: '/auth/signout',
     security: true,
     schema: LogoutUserSchema,
   },

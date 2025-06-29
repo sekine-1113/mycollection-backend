@@ -3,14 +3,14 @@ import prisma from '../prisma';
 export class UserProfileRepository {
   async findByUserId(userId: number) {
     return prisma.userProfile.findFirstOrThrow({
-      where: { user_id: userId },
+      where: { userId },
     });
   }
 
   async createUserProfile(data: {
-    user_id: number;
-    icon_url: string | null;
-    display_name: string | null;
+    userId: number;
+    iconUrl: string | null;
+    displayName: string | null;
   }) {
     try {
       return await prisma.userProfile.create({
@@ -24,13 +24,13 @@ export class UserProfileRepository {
   async updateUserProfile(
     userId: number,
     data: Partial<{
-      icon_url: string;
-      display_name: string;
-      is_public: boolean;
+      iconUrl: string;
+      displayName: string;
+      isPublic: boolean;
     }>,
   ) {
     return prisma.userProfile.update({
-      where: { user_id: userId },
+      where: { userId },
       data,
     });
   }

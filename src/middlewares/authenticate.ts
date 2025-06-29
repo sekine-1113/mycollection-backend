@@ -9,15 +9,23 @@ export const verifyToken = async (
   res: express.Response,
   next: express.NextFunction,
 ): Promise<void> => {
+  let token;
+  if (!config.jwt.secret) {
+    throw new HTTPException('InternalServerError', {
+      detailMessage: 'トークンの認証に失敗しました。',
+    });
+  }
+  if (req.cookies && req.cookies.token) {
+    token = req.cookies.token;
+  }
+  if (!token && req.headers.authorization?.startsWith('Bearer ')) {
+    token = (req.headers.authorization ?? '').split(' ').at(-1);
+  }
+  if (!token) {
+    throw new HTTPException('Unauthorized');
+  }
   try {
-    const token = req.headers.authorization ?? '';
-    const bearer = token.split(' ').at(-1) ?? '';
-    if (!config.jwt.secret) {
-      throw new HTTPException('InternalServerError', {
-        detailMessage: 'トークンの認証に失敗しました。',
-      });
-    }
-    const decoded = jwt.verify(bearer, config.jwt.secret);
+    const decoded = jwt.verify(token, config.jwt.secret);
     req.decoded = decoded as JWTBody;
     next();
   } catch (err) {

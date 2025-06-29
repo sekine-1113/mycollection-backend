@@ -37,7 +37,7 @@ authRouter.post(
 );
 
 authRouter.post(
-  '/login',
+  '/signin',
   validateRequest(LoginUserSchema),
   defineHandler(async (req: Request, res: Response) => {
     const { email: email, password: rawPassword } =
@@ -53,7 +53,7 @@ authRouter.post(
         secure: true,
         sameSite: 'strict',
       });
-      res.setHeader('authorization', token);
+      res.setHeader('authorization', `Bearer ${token}`);
       res.status(200).json({ token });
     } catch (err) {
       if (err instanceof HTTPException) {
@@ -66,11 +66,15 @@ authRouter.post(
   }),
 );
 
-authRouter.post('/logout', verifyToken, async (req: Request, res: Response) => {
-  res.cookie('token', null, {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'strict',
-  });
-  res.status(204).json({});
-});
+authRouter.post(
+  '/signout',
+  verifyToken,
+  async (req: Request, res: Response) => {
+    res.cookie('token', null, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+    });
+    res.status(204).json({});
+  },
+);
