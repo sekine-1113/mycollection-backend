@@ -1,11 +1,11 @@
 import express from 'express';
 import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
-import { authRouter as authRouterV1 } from './controllers/v1/authController';
-import { userRouter } from './routes/users';
+import { authRouter } from './auth/authRouter';
+import { userRouter } from './user/userRouter';
 import rateLimit from 'express-rate-limit';
-import { openApiDocument } from './openapi';
-import { errorHandler, loggingHandler } from './middlewares/handlers';
+import { openApiDocument } from './swagger/openapi';
+import { errorHandler, debugHandler } from './middlewares/handlers';
 import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
 import z from 'zod';
 import cookieParser from 'cookie-parser';
@@ -37,10 +37,10 @@ app.use(
 
 app.use('/swagger-ui', swaggerUi.serve, swaggerUi.setup(openApiDocument));
 if (process.env.NODE_ENV === 'develop' || true) {
-  app.use(loggingHandler);
+  app.use(debugHandler);
 }
 app.use('/api/v1', apiLimiter);
-app.use('/api/v1/auth', authRouterV1);
+app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
 // app.use("/api/v1/admin/")
 

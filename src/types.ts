@@ -28,10 +28,10 @@ export type SchemaType = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body: z.ZodObject<any>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  responses: { [key: string]: { description: string; body: z.ZodObject<any> } };
+  responses: Record<number, { description: string; body: z.ZodObject<any> }>;
 };
 
-type Method = 'get' | 'post' | 'put' | 'delete';
+export type Method = 'get' | 'post' | 'put' | 'delete';
 export type OpenAPISchemaType = {
   method: Method;
   path: string;
