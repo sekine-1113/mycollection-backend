@@ -17,7 +17,7 @@ export const ListUserSchema = createSchema({
             user_public_id: z.string(),
             icon_url: z.string().optional(),
             display_name: z.string().optional(),
-            is_public: z.boolean(),
+            is_public: z.boolean().optional(),
             logins: z.array(z.date()),
           }),
         ),
@@ -54,6 +54,7 @@ export const CreateUserProfileSchema = createSchema({
   body: z.object({
     icon_url: z.string().optional(),
     display_name: z.string().optional(),
+    is_public: z.boolean().optional().default(true),
   }),
   responses: {
     201: {

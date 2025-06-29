@@ -1,3 +1,4 @@
+import { UserPermission } from '@prisma/client';
 import z from 'zod';
 
 declare global {
@@ -18,6 +19,7 @@ interface BaseJWTBody {
 
 export interface JWTBody extends BaseJWTBody {
   publicId: string;
+  permission: UserPermission;
 }
 
 export type SchemaType = {
