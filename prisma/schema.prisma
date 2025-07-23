@@ -21,18 +21,20 @@ datasource db {
 
 enum UserPermission {
   USER
+  TRIAL
+  PAID
   ADMIN
 }
 
 model User {
-  id         Int            @id @default(autoincrement())
-  publicId   String         @unique @default(uuid()) @map("public_id")
-  email      String         @unique
-  username   String
-  password   String
-  permission UserPermission @default(USER)
-  createdAt  DateTime       @default(now()) @map("created_at")
-  updatedAt  DateTime       @updatedAt @map("updated_at")
+  id           Int            @id @default(autoincrement())
+  publicId     String         @unique @default(uuid()) @map("public_id")
+  email        String         @unique
+  username     String
+  firebase_uid String         @unique
+  permission   UserPermission @default(USER)
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
 
   profile UserProfile?
   deleted DeletedUser?
