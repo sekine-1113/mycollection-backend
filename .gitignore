@@ -7,3 +7,7 @@ src/reports
 src/posts
 src/admin
 src/contacts
+tests
+logs
+
+my-collection-project-service-account.json

@@ -17,21 +17,22 @@
 ユーザ
 GET /users/me
 PUT /users/me
-POST /users/me/password
+DELETE /users/me
+POST /users/me/profile
+PUT /users/me/profile
+GET /users/me/logins
+GET /users/me/posts
+<!-- POST /users/me/password -->
 GET /users?query=name
 GET /users/:publicId
 GET /users/:publicId/posts
-DELETE /users/me
-GET /users/me/profile
-PUT /users/me/profile
-GET /users/me/logins
 
 コンテンツ
 GET /posts?query=name
 POST /posts
 GET /posts/:id
-DELETE /posts/:id
 PUT /posts/:id
+DELETE /posts/:id
 
 通報
 POST /reports
