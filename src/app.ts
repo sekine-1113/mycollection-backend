@@ -1,21 +1,15 @@
-import express from 'express';
-import cors from 'cors';
-import swaggerUi from 'swagger-ui-express';
-import { authRouter } from './auth/authRouter';
-import { userRouter } from './users/userRouter';
-import { openApiDocument } from './swagger/openapi';
-import { errorHandler, debugHandler } from './middlewares/handlers';
 import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
-import z from 'zod';
 import cookieParser from 'cookie-parser';
-import config from './config';
-import { authRateLimiter, userRateLimiter } from './middlewares/rateLimit';
+import cors from 'cors';
+import express, { Router } from 'express';
+import swaggerUi from 'swagger-ui-express';
+import z from 'zod';
+import { debugHandler, errorHandler } from './middlewares/handlers';
+import { usersRateLimiter } from './middlewares/rateLimit';
+import { usersRouter } from './routes';
+import { openApiDocument } from './swagger/openapi';
 
 extendZodWithOpenApi(z);
-
-if (!config.ACCESS_SECRET || !config.REFRESH_SECRET) {
-  console.error('config が 設定されていません。');
-}
 
 const app = express();
 app.use(express.json());
@@ -33,11 +27,10 @@ if (process.env.NODE_ENV === 'develop' || true) {
   app.use(debugHandler);
 }
 
-// app.use('/api/v1', apiLimiter);
-app.use('/api/v1/auth', authRateLimiter, authRouter);
-app.use('/api/v1/users', userRateLimiter, userRouter);
-// app.use("/api/v1/admin/")
+const apiV1Router = Router();
+apiV1Router.use('/users', usersRateLimiter, usersRouter);
 
+app.use('/api/v1', apiV1Router);
 app.use(errorHandler);
 
 export default app;
