@@ -1,11 +1,9 @@
 import app from './app';
 import config from './config';
-import { logger } from './logs/logger';
+import { logger } from './logger';
 
 const port = config.PORT;
 app.listen(port, () => {
   logger.info(`Server Running on: ${config.DOMAIN}:${port}`);
-  if (config.ENVIRONMENT === 'develop') {
-    console.log(`${config.DOMAIN}:${port}/swagger-ui`);
-  }
+  logger.debug(`Swagger UI: ${config.DOMAIN}:${port}/swagger-ui`);
 });
