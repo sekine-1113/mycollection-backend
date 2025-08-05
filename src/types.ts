@@ -1,25 +1,18 @@
-import { UserPermission } from '@prisma/client';
+import { UserRole } from '@prisma/client';
 import z from 'zod';
 
 declare global {
   namespace Express {
     interface Request {
-      decoded?: JWTBody;
+      decoded?: {
+        role: string;
+        firebaseUid: string;
+      };
       validatedBody?: { [key: string]: unknown };
       validatedParams?: { [key: string]: unknown };
       validatedQuery?: { [key: string]: unknown };
     }
   }
-}
-
-interface BaseJWTBody {
-  iat: number;
-  exp: number;
-}
-
-export interface JWTBody extends BaseJWTBody {
-  publicId: string;
-  permission: UserPermission;
 }
 
 export type SchemaType = {
