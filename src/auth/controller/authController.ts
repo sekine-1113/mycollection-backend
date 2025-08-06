@@ -1,17 +1,12 @@
 import express, { Request, Response } from 'express';
-import { UserService } from '../../user/service/userService';
 import { HTTPException } from '../../error';
 import { defineHandler } from '../../middlewares/handlers';
-import { AuthService } from '../service/authService';
-import {
-  SignUpUserSchema,
-  SignInUserSchema,
-  SignOutUserSchema,
-} from '../schema/authSchema';
+import { authService } from '../service/authService';
+import { SignUpUserSchema, SignInUserSchema } from '../schema/authSchema';
+import { userService } from '../../users/service/userService';
+import { z } from 'zod';
 
 export const authRouter = express.Router();
-const userService = new UserService();
-const authService = new AuthService();
 
 export const signUpHandler = defineHandler(
   async (req: Request, res: Response) => {
@@ -19,7 +14,7 @@ export const signUpHandler = defineHandler(
       email: email,
       password: rawPassword,
       username: username,
-    } = SignUpUserSchema.body.parse(req.validatedBody);
+    } = req.validatedBody as z.infer<typeof SignUpUserSchema.body>;
     const createdUser = await userService.registerUser(
       email,
       rawPassword,
@@ -36,15 +31,15 @@ export const signUpHandler = defineHandler(
 
 export const signInHandler = defineHandler(
   async (req: Request, res: Response) => {
-    const { email: email, password: rawPassword } = SignInUserSchema.body.parse(
-      req.validatedBody,
-    );
+    const { email: email, password: rawPassword } =
+      req.validatedBody as z.infer<typeof SignInUserSchema.body>;
+
     if (!email || !rawPassword)
       throw new HTTPException('BadRequest', {
         detailMessage: 'email または password が入力されていません。',
       });
     try {
-      const { token } = await authService.login(email, rawPassword);
+      const { token } = await authService.login(email);
       res.cookie('token', token, {
         httpOnly: true,
         secure: true,
@@ -72,4 +67,8 @@ export const signOutHandler = defineHandler(
     });
     res.status(204).json({});
   },
+);
+
+export const refreshHandler = defineHandler(
+  async (req: Request, res: Response) => {},
 );

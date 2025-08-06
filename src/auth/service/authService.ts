@@ -1,23 +1,26 @@
-import jwt, { Secret, SignOptions } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import config from '../../config';
 import { HTTPException } from '../../error';
-import { UserService } from '../../user/service/userService';
-import { JWTBody } from '../../types';
+import { userService, UserService } from '../../users/service/userService';
+import { UserRole } from '@prisma/client';
 
 export class AuthService {
-  private userService = new UserService();
+  private userService: UserService;
 
-  async login(email: string, password: string) {
-    const user = await this.userService.loginUser(email, password);
+  constructor(userService: UserService) {
+    this.userService = userService;
+  }
+
+  async login(email: string) {
+    const user = await this.userService.loginUser(email);
     if (!user)
       throw new HTTPException('NotFound', {
         detailMessage: 'email または password に誤りがあります。',
       });
-    const token = jwt.sign(
-      { publicId: user.publicId } as JWTBody,
-      config.jwt.secret as Secret,
-      config.jwt.options as SignOptions,
-    );
+    const token = '';
+
     return { token };
   }
 }
+
+export const authService = new AuthService(userService);

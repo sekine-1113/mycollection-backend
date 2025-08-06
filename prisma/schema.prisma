@@ -1,64 +1,16 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 generator erd {
   provider                  = "prisma-erd-generator"
-  theme                     = "forest"
   output                    = "ERD.svg"
-  includeRelationFromFields = true
   config                    = "mermaid-config.json"
+  includeRelationFromFields = "true"
+  theme                     = "forest"
 }
 
 datasource db {
   provider = "sqlite"
-  // provider = "mysql" or "postgresql"
   url      = env("DATABASE_URL")
-}
-
-model User {
-  id         Int            @id @default(autoincrement())
-  publicId   String         @unique @default(uuid()) @map("public_id")
-  email      String         @unique
-  username   String
-  password   String
-  permission UserPermission @default(USER)
-  createdAt  DateTime       @default(now()) @map("created_at")
-  updatedAt  DateTime       @updatedAt @map("updated_at")
-
-  profile UserProfile?
-  deleted DeletedUser?
-  logins  UserLoginLog[]
-}
-
-model UserProfile {
-  userId      Int     @unique @map("user_id")
-  iconUrl     String? @map("icon_url")
-  displayName String? @map("display_name")
-  isPublic    Boolean @default(true) @map("is_public")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model DeletedUser {
-  userId    Int      @unique @map("user_id")
-  deletedAt DateTime @default(now()) @map("deleted_at")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model UserLoginLog {
-  id         Int      @id @default(autoincrement())
-  userId     Int      @map("user_id")
-  loggedInAt DateTime @default(now()) @map("logged_in_at")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-enum UserPermission {
-  USER
-  ADMIN
 }

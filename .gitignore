@@ -1,3 +1,13 @@
 node_modules
 # Keep environment variables out of version control
 .env
+.vscode
+
+src/reports
+src/posts
+src/admin
+src/contacts
+tests
+logs
+
+my-collection-project-service-account.json
