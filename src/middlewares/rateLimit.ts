@@ -24,15 +24,16 @@ export const authRateLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-export const userRateLimiter = rateLimit({
+export const usersRateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: (req: Request) => {
     const user = req.decoded;
     if (!user) return permissionLimits.GUEST;
-    return permissionLimits[user.permission] ?? permissionLimits.USER;
+    return permissionLimits[user.role] ?? permissionLimits.USER;
   },
   keyGenerator: (req) =>
-    req.decoded ? `user:${req.decoded.publicId}` : (req.ip ?? randomUUID()),
+    req.decoded ? `user:${req.decoded.firebaseUid}` : (req.ip ?? randomUUID()),
+  message: 'Too many requests',
   standardHeaders: true,
   legacyHeaders: false,
 });
