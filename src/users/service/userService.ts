@@ -15,14 +15,13 @@ export class UserService {
     return await this.userRepository.findByPublicId(publicId);
   }
 
-  async loginUser(email: string, rawPassword: string) {
+  async findByFirebaseUid(firebaseUid: string) {
+    return this.userRepository.findByFirebaseUid(firebaseUid);
+  }
+
+  async loginUser(email: string) {
     const user = await this.userRepository.findByEmail(email);
     if (!user) {
-      return null;
-    }
-
-    const isPasswordValid = await bcrypt.compare(rawPassword, user.password);
-    if (!isPasswordValid) {
       return null;
     }
 
@@ -33,30 +32,17 @@ export class UserService {
     return user;
   }
 
-  async registerUser(email: string, rawPassword: string, username: string) {
-    const hashedPassword = await bcrypt.hash(
-      rawPassword,
-      config.PASSWORD_SALT_ROUNDS,
-    );
+  async registerUser(email: string, username: string, firebaseUid: string) {
     return await this.userRepository.createUser({
       email: email,
-      password: hashedPassword,
       username: username,
+      firebaseUid,
+      roleId: 1,
     });
   }
 
   async deleteUser(userId: number) {
     return await this.userRepository.deleteUser(userId);
-  }
-
-  async updateUserPassword(userId: number, newPassword: string) {
-    const hashedPassword = await bcrypt.hash(
-      newPassword,
-      config.PASSWORD_SALT_ROUNDS,
-    );
-    return await this.userRepository.updateUser(userId, {
-      password: hashedPassword,
-    });
   }
 
   async createProfile(data: {
@@ -78,3 +64,5 @@ export class UserService {
     return await this.userProfileRepository.updateUserProfile(userId, data);
   }
 }
+
+export const userService = new UserService();

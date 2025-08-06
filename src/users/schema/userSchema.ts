@@ -13,12 +13,19 @@ export const ListUserSchema = createSchema({
       description: 'Success',
       body: z.object({
         list: z.array(
+          //       user_public_id: string;
+          // profile: {
+          //     icon_url: string | null | undefined;
+          //     display_name: string | null | undefined;
+          //     is_public: boolean | undefined;
+          // };
           z.object({
             user_public_id: z.string(),
-            icon_url: z.string().optional(),
-            display_name: z.string().optional(),
-            is_public: z.boolean().optional(),
-            logins: z.array(z.date()),
+            profile: z.object({
+              icon_url: z.string().nullish(),
+              display_name: z.string().nullish(),
+              is_public: z.boolean().optional(),
+            }),
           }),
         ),
       }),
@@ -37,19 +44,18 @@ export const DetailUserSchema = createSchema({
       description: 'Success',
       body: z.object({
         user_public_id: z.string(),
-        icon_url: z.string().optional(),
-        display_name: z.string().optional(),
-        is_public: z.boolean(),
-        logins: z.array(z.date()),
+        profile: z.object({
+          icon_url: z.string().optional(),
+          display_name: z.string().optional(),
+          is_public: z.boolean(),
+        }),
       }),
     },
   },
 });
 
 export const CreateUserProfileSchema = createSchema({
-  params: z.object({
-    publicId: z.string(),
-  }),
+  params: z.object({}),
   query: z.object({}),
   body: z.object({
     icon_url: z.string().optional(),

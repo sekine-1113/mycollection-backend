@@ -33,26 +33,32 @@ export class UserRepository {
     });
   }
 
+  async findByFirebaseUid(firebaseUid: string) {
+    return prisma.user.findFirst({
+      where: { firebaseUid },
+      include: {
+        profile: true,
+        logins: true,
+      },
+    });
+  }
+
   async createUser(data: {
     email: string;
-    password: string;
     username: string;
+    firebaseUid: string;
+    roleId: number;
   }) {
     try {
-      return await prisma.user.create({
-        data,
-      });
+      return await prisma.user.create({ data });
     } catch (err) {
       console.error(err);
     }
   }
 
-  async updateUser(
-    id: number,
-    data: Partial<{ username: string; password: string }>,
-  ) {
+  async updateUser(firebaseUid: string, data: Partial<{ username: string }>) {
     return prisma.user.update({
-      where: { id },
+      where: { firebaseUid },
       data,
     });
   }
@@ -77,6 +83,17 @@ export class UserRepository {
     await prisma.deletedUser.delete({
       where: {
         userId,
+      },
+    });
+  }
+
+  async signedInLogs(userId: number) {
+    await prisma.userLoginLog.findMany({
+      where: {
+        id: userId,
+      },
+      orderBy: {
+        loggedInAt: 'desc',
       },
     });
   }
