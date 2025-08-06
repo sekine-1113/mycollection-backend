@@ -28,24 +28,42 @@ const generateUserEndpoints = (
 
 export default [
   ...generateUserEndpoints([
+    {
+      method: 'get',
+      path: '/users/me',
+      security: true,
+      schema: ListUserSchema,
+    },
+    {
+      method: 'put',
+      path: '/users/me',
+      security: true,
+      schema: ListUserSchema,
+    },
+    {
+      method: 'delete',
+      path: '/users/me',
+      security: true,
+      schema: ListUserSchema,
+    },
+    {
+      method: 'post',
+      path: '/users/me/profile',
+      security: true,
+      schema: CreateUserProfileSchema,
+    },
+    {
+      method: 'put',
+      path: '/users/me/profile',
+      security: true,
+      schema: UpdateUserProfileSchema,
+    },
     { method: 'get', path: '/users', security: true, schema: ListUserSchema },
     {
       method: 'get',
       path: '/users/{publicId}',
       security: true,
       schema: DetailUserSchema,
-    },
-    {
-      method: 'post',
-      path: '/users/{publicId}',
-      security: true,
-      schema: CreateUserProfileSchema,
-    },
-    {
-      method: 'put',
-      path: '/users/{publicId}',
-      security: true,
-      schema: UpdateUserProfileSchema,
     },
   ]),
 ];
