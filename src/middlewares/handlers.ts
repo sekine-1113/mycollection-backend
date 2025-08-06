@@ -21,19 +21,32 @@ export const debugHandler = (
   const method = req.method;
   switch (method.toLowerCase()) {
     case 'get':
-      console.log(req.path, req.query, req.params);
+      console.log({
+        method,
+        path: req.path,
+        query: req.query,
+        params: req.params,
+      });
       break;
     case 'post':
-      console.log(req.path, req.query, req.params, req.body);
-      break;
     case 'put':
-      console.log(req.path, req.query, req.params, req.body);
-      break;
     case 'delete':
-      console.log(req.path, req.query, req.params, req.body);
+      console.log({
+        method,
+        path: req.path,
+        query: req.query,
+        params: req.params,
+        body: req.body,
+      });
       break;
     default:
-      console.log(method, req.path, req.query, req.params, req.body);
+      console.log({
+        method,
+        path: req.path,
+        query: req.query,
+        params: req.params,
+        body: req.body,
+      });
       break;
   }
   next();

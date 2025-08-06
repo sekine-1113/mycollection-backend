@@ -1,4 +1,4 @@
-import express from 'express';
+import { Router } from 'express';
 import { verifyToken } from '../middlewares/authenticate';
 import { validateRequest } from '../middlewares/validate';
 import {
@@ -12,7 +12,7 @@ import {
   signUpHandler,
 } from './controller/authController';
 
-export const authRouter = express.Router();
+export const authRouter = Router();
 
 authRouter.post('/signup', validateRequest(SignUpUserSchema), signUpHandler);
 authRouter.post('/signin', validateRequest(SignInUserSchema), signInHandler);
