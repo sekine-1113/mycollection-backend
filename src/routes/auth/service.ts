@@ -8,6 +8,7 @@ export class AuthService {
   }
 
   async signIn(email: string) {}
+
   async signUp(
     email: string,
     username: string,

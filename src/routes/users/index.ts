@@ -1,19 +1,13 @@
-import { RequestHandler, Router } from 'express';
+import { Router } from 'express';
 import { verifyToken } from '../../middlewares/authenticate';
 import { validateRequest } from '../../middlewares/validate';
-import { Method, SchemaType } from '../../types';
-import { ListUserSchema, listUsersHandler } from './__root__';
+import { ListUserSchema, listUserHandler } from './__root__';
 import { DetailUserSchema, userDetailHandler } from './[publicId]';
+import type { RouterHandler } from '../../types';
 
 export const usersRouter = Router();
 
-export const usersRouterHandlers: {
-  method: Method;
-  path: string;
-  handlers: RequestHandler[];
-  security: boolean;
-  schema: SchemaType;
-}[] = [
+export const usersRouterHandlers: RouterHandler[] = [
   {
     method: 'get',
     path: '/me',
@@ -52,7 +46,7 @@ export const usersRouterHandlers: {
   {
     method: 'get',
     path: '/',
-    handlers: [verifyToken, validateRequest(ListUserSchema), listUsersHandler],
+    handlers: [verifyToken, validateRequest(ListUserSchema), listUserHandler],
     security: true,
     schema: ListUserSchema,
   },

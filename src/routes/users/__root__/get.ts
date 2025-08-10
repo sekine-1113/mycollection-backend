@@ -28,7 +28,7 @@ export const ListUserSchema = createSchema({
   },
 });
 
-export const listUsersHandler = defineHandler(
+export const listUserHandler = defineHandler(
   async (req: Request, res: Response) => {
     const users = await userService.findMany({
       profile: {

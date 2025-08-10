@@ -1,18 +1,12 @@
-import { RequestHandler, Router } from 'express';
+import { Router } from 'express';
 import { validateRequest } from '../../middlewares/validate';
-import { Method, SchemaType } from '../../types';
 import { signUpHandler, SignUpUserSchema } from './signup';
 import { signInHandler, SignInUserSchema } from './signin';
+import type { RouterHandler } from '../../types';
 
 export const authRouter = Router();
 
-export const authRouterHandlers: {
-  method: Method;
-  path: string;
-  handlers: RequestHandler[];
-  security: boolean;
-  schema: SchemaType;
-}[] = [
+export const authRouterHandlers: RouterHandler[] = [
   {
     method: 'post',
     path: '/signup',

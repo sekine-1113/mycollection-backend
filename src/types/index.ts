@@ -1,3 +1,6 @@
+import type { RequestHandler } from 'express';
+import type { Method, SchemaType } from './swagger';
+
 export * from './storage';
 export * from './swagger';
 
@@ -14,3 +17,11 @@ declare global {
     }
   }
 }
+
+export type RouterHandler = {
+  method: Method;
+  path: string;
+  handlers: RequestHandler[];
+  security: boolean;
+  schema: SchemaType;
+};
