@@ -5,24 +5,14 @@
 認証
 /auth/signup
 /auth/signin
-/auth/signout
-/auth/refresh
 /auth/me
-
-+ /auth/change-password
-+ /auth/forgot-password
-+ /auth/verify-email
-+ /auth/oauth/:provider
 
 ユーザ
 GET /users/me
 PUT /users/me
 DELETE /users/me
-POST /users/me/profile
-PUT /users/me/profile
 GET /users/me/logins
 GET /users/me/posts
-<!-- POST /users/me/password -->
 GET /users?query=name
 GET /users/:publicId
 GET /users/:publicId/posts

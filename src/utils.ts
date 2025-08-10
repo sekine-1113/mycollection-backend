@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { Method } from './types';
+import { Method, SchemaType } from './types';
+import { RequestHandler } from 'express';
 
 export function createSchema<
   P extends z.ZodTypeAny,
@@ -29,3 +30,49 @@ export function createEndpoint<
 }) {
   return def;
 }
+
+export const generateEndpoints = (
+  pathPrefix: string,
+  tags: string[],
+  info: {
+    method: Method;
+    path: string;
+    security: boolean;
+    schema: SchemaType;
+  }[],
+) => {
+  return info.map((it) =>
+    createEndpoint({
+      method: it.method,
+      path: `${pathPrefix}${it.path}`,
+      security: it.security,
+      tags: tags,
+      schema: it.schema,
+    }),
+  );
+};
+
+export const generateSchema = (
+  pathPrefix: string,
+  tags: string[],
+  routerHandlers: {
+    method: Method;
+    path: string;
+    handlers: RequestHandler[];
+    security: boolean;
+    schema: SchemaType;
+  }[],
+) => {
+  return [
+    ...generateEndpoints(
+      pathPrefix,
+      tags,
+      routerHandlers.map((it) => ({
+        method: it.method,
+        path: it.path,
+        security: it.security,
+        schema: it.schema,
+      })),
+    ),
+  ];
+};
