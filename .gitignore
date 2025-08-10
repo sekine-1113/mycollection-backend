@@ -3,10 +3,11 @@ node_modules
 .env
 .vscode
 
-src/reports
-src/posts
-src/admin
-src/contacts
+src/routes/admin
+src/routes/contacts
+src/routes/posts
+src/routes/reports
+
 tests
 logs
 
