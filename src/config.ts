@@ -1,3 +1,6 @@
+import { configDotenv } from 'dotenv';
+configDotenv();
+
 type ConfigType = {
   DOMAIN: string;
   PORT: number;
