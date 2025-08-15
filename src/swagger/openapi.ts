@@ -34,13 +34,16 @@ openAPISchemas.forEach(({ method, path, security, tags, schema }) => {
     summary: `Operation for ${method} ${path}`,
     request: {
       params: schema.params,
-      body: {
-        content: {
-          'application/json': {
-            schema: schema.body,
-          },
-        },
-      },
+      body:
+        method === 'get'
+          ? undefined
+          : {
+              content: {
+                'application/json': {
+                  schema: schema.body,
+                },
+              },
+            },
     },
     responses: responses,
     security: security ? [{ BearerAuth: [] }] : [],
