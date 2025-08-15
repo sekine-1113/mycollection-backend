@@ -3,18 +3,27 @@ model PostType {
   publicId String @unique @default(uuid()) @map("public_id")
   name     String
 
-  Post Post[]
+  postSource PostSource[]
 }
 
 model Post {
-  id        String   @id @default(uuid())
-  userId    Int
-  typeId    Int
-  imageUrl  String
-  caption   String?
-  createdAt DateTime @default(now())
+  id        Int      @id @default(autoincrement())
+  publicId  String   @unique @default(uuid()) @map("public_id")
+  userId    Int      @map("user_id")
+  caption   String   @default("")
+  createdAt DateTime @default(now()) @map("created_at")
 
-  user    User     @relation(fields: [userId], references: [id])
-  type    PostType @relation(fields: [typeId], references: [id])
-  reports Report[]
+  user       User         @relation(fields: [userId], references: [id])
+  reports    Report[]
+  postSource PostSource[]
+}
+
+model PostSource {
+  id        String   @id @default(uuid())
+  publicId  String   @unique @default(uuid()) @map("public_id")
+  sourceUrl String   @map("source_url")
+  typeId    Int      @map("type_id")
+  type      PostType @relation(fields: [typeId], references: [id])
+  postId    Int
+  post      Post     @relation(fields: [postId], references: [id])
 }

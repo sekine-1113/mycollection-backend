@@ -1,5 +1,10 @@
-export * from './storage';
+import type { RequestHandler } from 'express';
+import type { Method, SchemaType } from './swagger';
+
+export * from '../interfaces/storage';
 export * from './swagger';
+
+export type Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : never;
 
 declare global {
   namespace Express {
@@ -14,3 +19,12 @@ declare global {
     }
   }
 }
+
+export type RouterHandler = {
+  method: Method;
+  path: string;
+  swaggerPath?: string;
+  handlers: RequestHandler[];
+  security: boolean;
+  schema: SchemaType;
+};

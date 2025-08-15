@@ -4,7 +4,7 @@ model User {
   email       String   @unique
   username    String
   firebaseUid String   @unique @map("firebase_uid")
-  roleId      Int
+  roleId      Int      @map("role_id")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
@@ -22,13 +22,13 @@ model UserRole {
   publicId String @unique @default(uuid()) @map("public_id")
   name     String
 
-  User User[]
+  user User[]
 }
 
 model UserProfile {
   userId      Int     @unique @map("user_id")
-  iconUrl     String? @map("icon_url")
-  displayName String? @map("display_name")
+  iconUrl     String  @map("icon_url")
+  displayName String  @map("display_name")
   isPublic    Boolean @default(true) @map("is_public")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
