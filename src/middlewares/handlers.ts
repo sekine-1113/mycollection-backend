@@ -1,5 +1,11 @@
 import { HTTPException } from '../error';
 import { Request, Response, NextFunction, RequestHandler } from 'express';
+import { logger } from '../logger';
+
+export const dummyHandler = (req: Request, res: Response) => {
+  logger.debug(`${req.url}: Not Implemented.`);
+  res.status(200).json({ Status: 'Dummy' });
+};
 
 export const defineHandler =
   (

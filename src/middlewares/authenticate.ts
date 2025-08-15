@@ -1,6 +1,20 @@
 import type express from 'express';
 import { HTTPException } from '../error';
 
+const validAuthorizationHeaders = (req: express.Request) => {
+  if (!req.headers.authorization) {
+    return false;
+  }
+  if (!req.headers.authorization.startsWith('Bearer ')) {
+    return false;
+  }
+  const token = req.headers.authorization.split(' ').at(-1);
+  if (!token) {
+    return false;
+  }
+  return true;
+};
+
 export const verifyToken = async (
   req: express.Request,
   res: express.Response,
@@ -11,11 +25,7 @@ export const verifyToken = async (
     req.decoded = decoded;
     return next();
   }
-  if (!req.headers.authorization?.startsWith('Bearer ')) {
-    throw new HTTPException('Unauthorized');
-  }
-  const token = (req.headers.authorization ?? '').split(' ').at(-1);
-  if (!token) {
+  if (!validAuthorizationHeaders(req)) {
     throw new HTTPException('Unauthorized');
   }
   try {
