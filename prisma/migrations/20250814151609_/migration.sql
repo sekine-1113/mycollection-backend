@@ -38,6 +38,7 @@ CREATE TABLE "User" (
     "roleId" INTEGER NOT NULL,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL,
+    "userProfileId" INTEGER NOT NULL,
     CONSTRAINT "User_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "UserRole" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
@@ -51,8 +52,8 @@ CREATE TABLE "UserRole" (
 -- CreateTable
 CREATE TABLE "UserProfile" (
     "user_id" INTEGER NOT NULL,
-    "icon_url" TEXT,
-    "display_name" TEXT,
+    "icon_url" TEXT NOT NULL,
+    "display_name" TEXT NOT NULL,
     "is_public" BOOLEAN NOT NULL DEFAULT true,
     CONSTRAINT "UserProfile_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
