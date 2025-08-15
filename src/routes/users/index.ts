@@ -4,6 +4,7 @@ import { validateRequest } from '../../middlewares/validate';
 import { ListUserSchema, listUserHandler } from './__root__';
 import { DetailUserSchema, userDetailHandler } from './[publicId]';
 import type { RouterHandler } from '../../types';
+import { dummyHandler } from '../../middlewares/handlers';
 
 export const usersRouter = Router();
 
@@ -11,41 +12,41 @@ export const usersRouterHandlers: RouterHandler[] = [
   {
     method: 'get',
     path: '/me',
-    handlers: [verifyToken],
+    handlers: [verifyToken, dummyHandler],
     security: true,
     schema: ListUserSchema,
   },
   {
     method: 'put',
     path: '/me',
-    handlers: [verifyToken],
+    handlers: [verifyToken, dummyHandler],
     security: true,
     schema: ListUserSchema,
   },
   {
     method: 'delete',
     path: '/me',
-    handlers: [verifyToken],
+    handlers: [verifyToken, dummyHandler],
     security: true,
     schema: ListUserSchema,
   },
   {
     method: 'get',
     path: '/me/logins',
-    handlers: [verifyToken],
+    handlers: [verifyToken, dummyHandler],
     security: true,
     schema: ListUserSchema,
   },
   {
     method: 'get',
     path: '/me/posts',
-    handlers: [verifyToken],
+    handlers: [verifyToken, dummyHandler],
     security: true,
     schema: ListUserSchema,
   },
   {
     method: 'get',
-    path: '/',
+    path: '',
     handlers: [verifyToken, validateRequest(ListUserSchema), listUserHandler],
     security: true,
     schema: ListUserSchema,
@@ -53,6 +54,7 @@ export const usersRouterHandlers: RouterHandler[] = [
   {
     method: 'get',
     path: '/:publicId',
+    swaggerPath: '/{publicId}',
     handlers: [
       verifyToken,
       validateRequest(DetailUserSchema),
@@ -64,7 +66,8 @@ export const usersRouterHandlers: RouterHandler[] = [
   {
     method: 'get',
     path: '/:publicId/posts',
-    handlers: [verifyToken],
+    swaggerPath: '/{publicId}/posts',
+    handlers: [verifyToken, dummyHandler],
     security: true,
     schema: ListUserSchema,
   },
