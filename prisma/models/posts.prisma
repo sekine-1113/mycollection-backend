@@ -4,6 +4,8 @@ model PostType {
   name     String
 
   postSource PostSource[]
+
+  @@map("post_type")
 }
 
 model Post {
@@ -16,6 +18,8 @@ model Post {
   user       User         @relation(fields: [userId], references: [id])
   reports    Report[]
   postSource PostSource[]
+
+  @@map("post")
 }
 
 model PostSource {
@@ -26,4 +30,6 @@ model PostSource {
   type      PostType @relation(fields: [typeId], references: [id])
   postId    Int
   post      Post     @relation(fields: [postId], references: [id])
+
+  @@map("post_source")
 }
