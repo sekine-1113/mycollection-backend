@@ -1,18 +1,39 @@
 import type express from 'express';
-import { HTTPException } from '../error';
+import { auth } from '../lib/firebase';
+import { generateTmpEmail } from '../utils';
+import { ErrorTypes, HTTPException } from '../error';
 
-const validAuthorizationHeaders = (req: express.Request) => {
-  if (!req.headers.authorization) {
-    return false;
+type ObtainTokenResult =
+  | {
+      token: string;
+      error?: null;
+    }
+  | { token: null; error: { type: keyof typeof ErrorTypes; message: string } };
+
+const obtainAuthorizationHeaders = (
+  req: express.Request,
+): ObtainTokenResult => {
+  const authorization = req.headers.authorization;
+  if (!authorization) {
+    return {
+      token: null,
+      error: { type: 'Unauthorized', message: 'トークンがありません。' },
+    };
   }
-  if (!req.headers.authorization.startsWith('Bearer ')) {
-    return false;
+  if (!authorization.startsWith('Bearer ')) {
+    return {
+      token: null,
+      error: { type: 'Unauthorized', message: 'トークンがありません。' },
+    };
   }
-  const token = req.headers.authorization.split(' ').at(-1);
+  const token = authorization.slice(7);
   if (!token) {
-    return false;
+    return {
+      token: null,
+      error: { type: 'Unauthorized', message: 'トークンがありません。' },
+    };
   }
-  return true;
+  return { token };
 };
 
 export const verifyToken = async (
@@ -21,16 +42,21 @@ export const verifyToken = async (
   next: express.NextFunction,
 ): Promise<void> => {
   if (process.env.NODE_ENV === 'develop') {
-    const decoded = { role: 'admin', firebaseUid: 'dummy' };
-    req.decoded = decoded;
+    const decoded = { firebaseUid: 'dummy', email: 'test@example.com' };
+    req.user = decoded;
     return next();
   }
-  if (!validAuthorizationHeaders(req)) {
-    throw new HTTPException('Unauthorized');
+  const { token, error } = obtainAuthorizationHeaders(req);
+  if (error) {
+    throw new HTTPException(error.type, { message: error.message });
   }
+
   try {
-    const decoded = { role: 'admin', firebaseUid: 'dummy' };
-    req.decoded = decoded;
+    const decoded = await auth.verifyIdToken(token);
+    req.user = {
+      firebaseUid: decoded.uid,
+      email: decoded.email ?? generateTmpEmail(),
+    };
     return next();
   } catch (err) {
     if (err instanceof HTTPException) {
@@ -40,21 +66,4 @@ export const verifyToken = async (
       detailMessage: 'トークンの認証に失敗しました。',
     });
   }
-};
-
-export const requirePermission = (minPermission?: string) => {
-  return async (
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction,
-  ): Promise<void> => {
-    const userRole = req.decoded?.role;
-    if (!userRole) {
-      throw new HTTPException('Unauthorized');
-    }
-    if (userRole) {
-      return next();
-    }
-    throw new HTTPException('Forbidden');
-  };
 };
