@@ -1,5 +1,14 @@
 import { z } from 'zod';
 import { Expand, Method, RouterHandler } from './types';
+import { v4 } from 'uuid';
+import { fileURLToPath } from 'url';
+import path from 'path';
+
+export const __dirnameWrapper = (base: string /* import.meta.url */) => {
+  const __filename = fileURLToPath(base);
+  const __dirname = path.dirname(__filename);
+  return __dirname;
+};
 
 export const createSchema = <
   P extends z.ZodTypeAny,
@@ -72,4 +81,8 @@ export const generateSchema = (
       })),
     ),
   ];
+};
+
+export const generateTmpEmail = () => {
+  return `${v4()}@example.com`;
 };
