@@ -15,6 +15,9 @@ model User {
 
   posts   Post[]
   reports Report[]
+  contacts Contact[]
+
+  @@map("user")
 }
 
 model UserRole {
@@ -23,6 +26,8 @@ model UserRole {
   name     String
 
   user User[]
+
+  @@map("user_role")
 }
 
 model UserProfile {
@@ -32,13 +37,17 @@ model UserProfile {
   isPublic    Boolean @default(true) @map("is_public")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_profile")
 }
 
 model DeletedUser {
-  userId    Int      @unique @map("user_id")
+  firebaseUid    String      @unique @map("firebase_uid")
   deletedAt DateTime @default(now()) @map("deleted_at")
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [firebaseUid], references: [firebaseUid], onDelete: Cascade)
+
+  @@map("deleted_user")
 }
 
 model UserLoginLog {
@@ -47,4 +56,6 @@ model UserLoginLog {
   loggedInAt DateTime @default(now()) @map("logged_in_at")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_login_log")
 }

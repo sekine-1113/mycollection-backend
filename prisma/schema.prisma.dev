@@ -1,0 +1,16 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator erd {
+  provider                  = "prisma-erd-generator"
+  output                    = "ERD.svg"
+  config                    = "mermaid-config.json"
+  includeRelationFromFields = "true"
+  theme                     = "forest"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}

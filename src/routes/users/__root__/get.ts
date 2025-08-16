@@ -6,7 +6,12 @@ import prisma from '../../../lib/prisma';
 
 export const ListUserSchema = createSchema({
   params: z.object({}),
-  query: z.object({}),
+  query: z.object({
+    q: z.string().optional(),
+    displayName: z.string().optional(),
+    sort: z.string().optional(),
+    orderBy: z.string().optional(),
+  }),
   body: z.object({}),
   responses: {
     200: {
@@ -14,12 +19,13 @@ export const ListUserSchema = createSchema({
       body: z.object({
         list: z.array(
           z.object({
-            public_id: z.string(),
+            publicId: z.string(),
             profile: z.object({
-              icon_url: z.string(),
-              display_name: z.string(),
-              is_public: z.boolean(),
+              iconUrl: z.string(),
+              displayName: z.string(),
+              isPublic: z.boolean(),
             }),
+            postsCount: z.number(),
           }),
         ),
       }),
@@ -30,17 +36,18 @@ export const ListUserSchema = createSchema({
 export const listUserHandler = defineHandler(
   async (req: Request, res: Response) => {
     const users = await prisma.user.findMany({
-      where: { profile: { isPublic: true } },
-      include: { profile: true },
+      where: { profile: { isPublic: true }, deleted: null },
+      include: { profile: true, posts: true },
     });
     const responseData = {
       list: users.map((user) => ({
-        public_id: user.publicId,
+        publicId: user.publicId,
         profile: user.profile && {
-          icon_url: user.profile.iconUrl,
-          display_name: user.profile.displayName,
-          is_public: user.profile.isPublic,
+          iconUrl: user.profile.iconUrl,
+          displayName: user.profile.displayName,
+          isPublic: user.profile.isPublic,
         },
+        postsCount: user.posts.length,
       })),
     };
     const validatedResponse =

@@ -4,6 +4,13 @@ async function main() {
   await prisma.user.deleteMany();
   await prisma.userRole.deleteMany();
   await prisma.userProfile.deleteMany();
+  await prisma.postType.deleteMany();
+
+  await prisma.postType.create({
+    data: {
+      name: 'image',
+    },
+  });
 
   const adminRole = await prisma.userRole.create({
     data: {

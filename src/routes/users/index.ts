@@ -5,6 +5,15 @@ import { ListUserSchema, listUserHandler } from './__root__';
 import { DetailUserSchema, userDetailHandler } from './[publicId]';
 import type { RouterHandler } from '../../types';
 import { dummyHandler } from '../../middlewares/handlers';
+import {
+  userMeHandler,
+  UsersMeSchema,
+  userMeDeleteHandler,
+  UsersMeDeleteSchema,
+  userLoginsHandler,
+  UserLoginsSchema,
+} from './me';
+import { updateUserMeHandler, UpdateUserMeSchema } from './me/put';
 
 export const usersRouter = Router();
 
@@ -12,37 +21,42 @@ export const usersRouterHandlers: RouterHandler[] = [
   {
     method: 'get',
     path: '/me',
-    handlers: [verifyToken, dummyHandler],
+    handlers: [verifyToken, validateRequest(UsersMeSchema), userMeHandler],
     security: true,
-    schema: ListUserSchema,
+    schema: UsersMeSchema,
   },
   {
     method: 'put',
     path: '/me',
-    handlers: [verifyToken, dummyHandler],
+    handlers: [
+      verifyToken,
+      validateRequest(UpdateUserMeSchema),
+      updateUserMeHandler,
+    ],
     security: true,
-    schema: ListUserSchema,
+    schema: UpdateUserMeSchema,
   },
   {
     method: 'delete',
     path: '/me',
-    handlers: [verifyToken, dummyHandler],
+    handlers: [
+      verifyToken,
+      validateRequest(UsersMeDeleteSchema),
+      userMeDeleteHandler,
+    ],
     security: true,
-    schema: ListUserSchema,
+    schema: UsersMeDeleteSchema,
   },
   {
     method: 'get',
     path: '/me/logins',
-    handlers: [verifyToken, dummyHandler],
+    handlers: [
+      verifyToken,
+      validateRequest(UserLoginsSchema),
+      userLoginsHandler,
+    ],
     security: true,
-    schema: ListUserSchema,
-  },
-  {
-    method: 'get',
-    path: '/me/posts',
-    handlers: [verifyToken, dummyHandler],
-    security: true,
-    schema: ListUserSchema,
+    schema: UserLoginsSchema,
   },
   {
     method: 'get',
@@ -62,13 +76,5 @@ export const usersRouterHandlers: RouterHandler[] = [
     ],
     security: true,
     schema: DetailUserSchema,
-  },
-  {
-    method: 'get',
-    path: '/:publicId/posts',
-    swaggerPath: '/{publicId}/posts',
-    handlers: [verifyToken, dummyHandler],
-    security: true,
-    schema: ListUserSchema,
   },
 ];

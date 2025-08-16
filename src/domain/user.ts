@@ -4,31 +4,38 @@ import { Expand } from '../types';
 
 export type AggregateUser = {
   user: User;
-  profile: UserProfile;
+  profile: Partial<UserProfile>;
 };
 
-export type CreateUser = {
-  user: Expand<Omit<User, 'id' | 'publicId' | 'createdAt' | 'updatedAt'>>;
-  profile: Omit<UserProfile, 'userId'>;
+export type CreateUserInput = {
+  user: Expand<
+    Omit<
+      User,
+      'id' | 'publicId' | 'roleId' | 'profileId' | 'createdAt' | 'updatedAt'
+    >
+  >;
+  profile: Expand<Omit<UserProfile, 'userId'> | undefined>;
 };
 
-export const createUserWithProfile = (input: CreateUser) => {
+export const createUserWithProfile = (
+  input: CreateUserInput,
+): AggregateUser => {
   const user: User = {
     id: 0,
     publicId: '',
-    email: input.user.email,
-    username: input.user.username,
+    email: input.user?.email,
+    username: input.user?.username,
     firebaseUid: input.user.firebaseUid,
-    roleId: input.user.roleId,
-    profileId: input.user.profileId,
+    roleId: 1,
+    profileId: 0,
     createdAt: new Date(),
     updatedAt: new Date(),
   };
-  const profile: UserProfile = {
+  const profile: Partial<UserProfile> = {
     userId: user.id,
-    iconUrl: input.profile.iconUrl,
-    displayName: input.profile.displayName,
-    isPublic: input.profile.isPublic,
+    iconUrl: input.profile?.iconUrl,
+    displayName: input.profile?.displayName,
+    isPublic: input.profile?.isPublic,
   };
   return { user, profile };
 };
