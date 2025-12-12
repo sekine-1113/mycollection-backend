@@ -1,64 +1,74 @@
-import { RequestHandler, Router } from 'express';
+import { Router } from 'express';
 import { verifyToken } from '../../middlewares/authenticate';
 import { validateRequest } from '../../middlewares/validate';
-import { Method, SchemaType } from '../../types';
-import { ListUserSchema, listUsersHandler } from './__root__';
+import { ListUserSchema, listUserHandler } from './__root__';
 import { DetailUserSchema, userDetailHandler } from './[publicId]';
+import type { Method, RouterHandler } from '../../types';
+import { dummyHandler } from '../../middlewares/handlers';
+import {
+  userMeHandler,
+  UsersMeSchema,
+  userMeDeleteHandler,
+  UsersMeDeleteSchema,
+  userLoginsHandler,
+  UserLoginsSchema,
+} from './me';
+import { updateUserMeHandler, UpdateUserMeSchema } from './me/put';
 
 export const usersRouter = Router();
 
-export const usersRouterHandlers: {
-  method: Method;
-  path: string;
-  handlers: RequestHandler[];
-  security: boolean;
-  schema: SchemaType;
-}[] = [
+export const usersRouterHandlers: RouterHandler[] = [
   {
     method: 'get',
     path: '/me',
-    handlers: [verifyToken],
+    handlers: [verifyToken, validateRequest(UsersMeSchema), userMeHandler],
     security: true,
-    schema: ListUserSchema,
+    schema: UsersMeSchema,
   },
   {
     method: 'put',
     path: '/me',
-    handlers: [verifyToken],
+    handlers: [
+      verifyToken,
+      validateRequest(UpdateUserMeSchema),
+      updateUserMeHandler,
+    ],
     security: true,
-    schema: ListUserSchema,
+    schema: UpdateUserMeSchema,
   },
   {
     method: 'delete',
     path: '/me',
-    handlers: [verifyToken],
+    handlers: [
+      verifyToken,
+      validateRequest(UsersMeDeleteSchema),
+      userMeDeleteHandler,
+    ],
     security: true,
-    schema: ListUserSchema,
+    schema: UsersMeDeleteSchema,
   },
   {
     method: 'get',
     path: '/me/logins',
-    handlers: [verifyToken],
+    handlers: [
+      verifyToken,
+      validateRequest(UserLoginsSchema),
+      userLoginsHandler,
+    ],
     security: true,
-    schema: ListUserSchema,
+    schema: UserLoginsSchema,
   },
   {
     method: 'get',
-    path: '/me/posts',
-    handlers: [verifyToken],
-    security: true,
-    schema: ListUserSchema,
-  },
-  {
-    method: 'get',
-    path: '/',
-    handlers: [verifyToken, validateRequest(ListUserSchema), listUsersHandler],
+    path: '',
+    handlers: [verifyToken, validateRequest(ListUserSchema), listUserHandler],
     security: true,
     schema: ListUserSchema,
   },
   {
     method: 'get',
     path: '/:publicId',
+    swaggerPath: '/{publicId}',
     handlers: [
       verifyToken,
       validateRequest(DetailUserSchema),
@@ -66,12 +76,5 @@ export const usersRouterHandlers: {
     ],
     security: true,
     schema: DetailUserSchema,
-  },
-  {
-    method: 'get',
-    path: '/:publicId/posts',
-    handlers: [verifyToken],
-    security: true,
-    schema: ListUserSchema,
   },
 ];

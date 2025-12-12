@@ -3,8 +3,7 @@
 
 /api/v1
 認証
-/auth/signup
-/auth/signin
+/auth/login
 /auth/me
 
 ユーザ
@@ -13,9 +12,9 @@ PUT /users/me
 DELETE /users/me
 GET /users/me/logins
 GET /users/me/posts
-GET /users?query=name
+GET /users/me/settings
+GET /users?q=name&sort=&order_by=&page=&per=&
 GET /users/:publicId
-GET /users/:publicId/posts
 
 コンテンツ
 GET /posts?query=name

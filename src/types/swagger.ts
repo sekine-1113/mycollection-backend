@@ -1,13 +1,10 @@
-import z from 'zod';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type z from 'zod';
 
 export type SchemaType = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   params: z.ZodObject<any>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   query: z.ZodObject<any>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body: z.ZodObject<any>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   responses: Record<number, { description: string; body: z.ZodObject<any> }>;
 };
 

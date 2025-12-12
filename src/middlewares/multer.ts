@@ -14,3 +14,15 @@ export const imageUploadMulter = multer({
     cb(null, true);
   },
 });
+
+// export const videoUploadMulter = multer({
+//   storage: multer.diskStorage({}),
+//   fileFilter: (req, file, cb) => {
+//     const ext = path.extname(file.originalname);
+//     if (!allowImageExtensions.includes(ext)) {
+//       cb(null, false);
+//       return;
+//     }
+//     cb(null, true);
+//   },
+// });

@@ -1,6 +1,7 @@
 node_modules
 # Keep environment variables out of version control
 .env
+.env.*
 .vscode
 
 src/routes/admin
@@ -9,6 +10,8 @@ src/routes/posts
 src/routes/reports
 
 tests
+coverage
 logs
 
 my-collection-project-service-account.json
+dist
