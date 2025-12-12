@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type z from 'zod';
+import z from 'zod';
 
 export type SchemaType = {
   params: z.ZodObject<any>;
