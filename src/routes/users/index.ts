@@ -3,7 +3,7 @@ import { verifyToken } from '../../middlewares/authenticate';
 import { validateRequest } from '../../middlewares/validate';
 import { ListUserSchema, listUserHandler } from './__root__';
 import { DetailUserSchema, userDetailHandler } from './[publicId]';
-import type { RouterHandler } from '../../types';
+import type { Method, RouterHandler } from '../../types';
 import { dummyHandler } from '../../middlewares/handlers';
 import {
   userMeHandler,

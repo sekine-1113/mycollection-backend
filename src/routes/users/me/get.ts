@@ -4,6 +4,8 @@ import z from '../../../lib/zod';
 import { createSchema } from '../../../utils';
 import { HTTPException } from '../../../error';
 import prisma from '../../../lib/prisma';
+import { User } from '../../../entity/user';
+import { UserProfile } from '../../../entity/userProfile';
 
 export const UsersMeSchema = createSchema({
   params: z.object({}),
@@ -52,7 +54,19 @@ export const userMeHandler = defineHandler(
       },
     });
     if (!user) throw new HTTPException('NotFound');
-    const userData = {
+    type UserData = Pick<User, 'publicId'> & {
+      profile: Partial<
+        Pick<UserProfile, 'iconUrl' | 'displayName' | 'isPublic'>
+      >;
+    } & {
+      posts: {
+        publicId: string;
+        createdAt: Date;
+        caption: string;
+        source: { publicId: string; sourceUrl: string; type: string }[];
+      }[];
+    };
+    const userData: UserData = {
       publicId: user.publicId,
       profile: {
         iconUrl: user.profile?.iconUrl,

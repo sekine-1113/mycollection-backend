@@ -36,7 +36,7 @@ export const loginSchema = createSchema({
 });
 
 export const loginHandler = defineHandler(async (req, res) => {
-  const body = req.body as z.infer<typeof loginSchema.body>;
+  const body = req.validatedBody as z.infer<typeof loginSchema.body>;
   const { user: userModel, profile: profileModel } = createUserWithProfile({
     user: body.user,
     profile: body.profile,
