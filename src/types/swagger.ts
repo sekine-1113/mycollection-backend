@@ -1,13 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import z from 'zod';
 
 export type SchemaType = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   params: z.ZodObject<any>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   query: z.ZodObject<any>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   body: z.ZodObject<any>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   responses: Record<number, { description: string; body: z.ZodObject<any> }>;
 };
 
@@ -18,3 +19,16 @@ export type OpenAPISchemaType = {
   security: boolean;
   schema: SchemaType;
 };
+
+export const ZodFileType = z.object({
+  fieldname: z.string(),
+  originalname: z.string(),
+  encoding: z.string(),
+  mimetype: z.string(),
+  destination: z.string(),
+  filename: z.string(),
+  path: z.string(),
+  size: z.number(),
+});
+
+export type FileType = z.infer<typeof ZodFileType>;

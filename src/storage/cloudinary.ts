@@ -17,3 +17,6 @@ export class CloudinaryStorage implements StorageProvider {
     await cloudinary.uploader.destroy(key);
   }
 }
+
+const cloudinaryStorage = new CloudinaryStorage();
+export default cloudinaryStorage;

@@ -12,3 +12,7 @@ tests
 logs
 
 my-collection-project-service-account.json
+
+coverage
+dist
+.pnpm-store
