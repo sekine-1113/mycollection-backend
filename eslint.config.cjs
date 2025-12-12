@@ -3,7 +3,7 @@ const eslintParser = require("@typescript-eslint/parser");
 
 module.exports = [
   {
-    ignores: ["node_modules", "dist"],
+    ignores: ["node_modules", "dist", "jest.config.ts", "tests"],
   },
   {
     files: ["**/*.ts"],

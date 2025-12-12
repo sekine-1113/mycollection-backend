@@ -1,7 +1,7 @@
 import cloudinary from '../lib/cloudinary';
 import path from 'path';
 import fs from 'fs/promises';
-import { StorageProvider, UploadResult } from '../types/storage';
+import { StorageProvider, UploadResult } from '../interfaces/storage';
 
 export class CloudinaryStorage implements StorageProvider {
   async uploadFile(file: Express.Multer.File): Promise<UploadResult> {

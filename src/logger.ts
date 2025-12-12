@@ -2,7 +2,9 @@ import { createLogger, transports, format } from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
 import path from 'path';
 import config from './config';
+import { __dirnameWrapper } from './utils';
 
+const __dirname = __dirnameWrapper(import.meta.url);
 const logDir = path.join(__dirname, '../../logs');
 
 export const logger = createLogger({

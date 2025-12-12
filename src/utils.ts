@@ -1,17 +1,30 @@
 import { z } from 'zod';
-import { Method, SchemaType } from './types';
-import { RequestHandler } from 'express';
+import { Expand, Method, RouterHandler } from './types';
+import { v4 } from 'uuid';
+import { fileURLToPath } from 'url';
+import path from 'path';
 
-export function createSchema<
+export const __dirnameWrapper = (base: string /* import.meta.url */) => {
+  const __filename = fileURLToPath(base);
+  const __dirname = path.dirname(__filename);
+  return __dirname;
+};
+
+export const createSchema = <
   P extends z.ZodTypeAny,
   Q extends z.ZodTypeAny,
   B extends z.ZodTypeAny,
   R extends Record<number, { description: string; body: z.ZodTypeAny }>,
->(def: { params: P; query: Q; body: B; responses: R }) {
+>(def: {
+  params: P;
+  query: Q;
+  body: B;
+  responses: R;
+}) => {
   return def;
-}
+};
 
-export function createEndpoint<
+export const createEndpoint = <
   P extends z.ZodTypeAny,
   Q extends z.ZodTypeAny,
   B extends z.ZodTypeAny,
@@ -19,6 +32,7 @@ export function createEndpoint<
 >(def: {
   method: Method;
   path: string;
+  swaggerPath?: string;
   security: boolean;
   tags: string[];
   schema: {
@@ -27,24 +41,21 @@ export function createEndpoint<
     body: B;
     responses: R;
   };
-}) {
+}) => {
   return def;
-}
+};
 
 export const generateEndpoints = (
   pathPrefix: string,
   tags: string[],
-  info: {
-    method: Method;
-    path: string;
-    security: boolean;
-    schema: SchemaType;
-  }[],
+  info: Expand<Omit<RouterHandler, 'handlers'>>[],
 ) => {
   return info.map((it) =>
     createEndpoint({
       method: it.method,
-      path: `${pathPrefix}${it.path}`,
+      path: it.swaggerPath
+        ? `${pathPrefix}${it.swaggerPath}`
+        : `${pathPrefix}${it.path}`,
       security: it.security,
       tags: tags,
       schema: it.schema,
@@ -55,13 +66,7 @@ export const generateEndpoints = (
 export const generateSchema = (
   pathPrefix: string,
   tags: string[],
-  routerHandlers: {
-    method: Method;
-    path: string;
-    handlers: RequestHandler[];
-    security: boolean;
-    schema: SchemaType;
-  }[],
+  routerHandlers: RouterHandler[],
 ) => {
   return [
     ...generateEndpoints(
@@ -70,9 +75,14 @@ export const generateSchema = (
       routerHandlers.map((it) => ({
         method: it.method,
         path: it.path,
+        swaggerPath: it.swaggerPath,
         security: it.security,
         schema: it.schema,
       })),
     ),
   ];
+};
+
+export const generateTmpEmail = () => {
+  return `${v4()}@example.com`;
 };

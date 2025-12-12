@@ -1,14 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import z from 'zod';
+import type z from 'zod';
 
 export type SchemaType = {
-   
   params: z.ZodObject<any>;
-   
   query: z.ZodObject<any>;
-   
   body: z.ZodObject<any>;
-   
   responses: Record<number, { description: string; body: z.ZodObject<any> }>;
 };
 

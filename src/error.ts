@@ -1,5 +1,5 @@
 type ErrorDetails = {
-  [key: string]: string;
+  [key: string]: Object;
 };
 
 type ErrorInfo = {
